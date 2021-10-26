@@ -83,18 +83,3 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-
-# Legacy Eclipse project files
-.classpath
-.project
-.cproject
-.settings/
-
-# Mongo Explorer plugin
-.idea/mongoSettings.xml
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-
-### AndroidStudio Patch ###
-
-!/gradle/wrapper/gradle-wrapper.jar
