@@ -7,7 +7,8 @@ Have you ever had an issue with catching rare pokemon? Are you jealous of Ash fo
 Rocket Corner is not responsible for any trainer battles that may occur due to stolen pokemon. Rocekt Corner is not responsible for any illness or side affects caused by consuming or using Pokemon parts.
 
 ## Mock Up
-**insert mockup image here**
+![Mock Up](https://user-images.githubusercontent.com/26446581/139300802-6134b67d-6904-4173-a21c-6e23a967a77e.png)
+
 
 ## ERD
 **insert ERD image here**
