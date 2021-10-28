@@ -11,7 +11,8 @@ Rocket Corner is not responsible for any trainer battles that may occur due to s
 
 
 ## ERD
-**insert ERD image here**
+![databaseERD](https://user-images.githubusercontent.com/41580430/139314856-cb3b446b-3036-4d0c-92fb-a51a9320ccaa.png)
+
 
 ## Contributors
 * [Amy Wall](https://github.com/amemariee)
