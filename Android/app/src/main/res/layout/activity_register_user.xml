@@ -4,16 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Hello World!"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    tools:context=".RegisterUser">
 
     <TextView
         android:id="@+id/banner"
@@ -43,15 +34,15 @@
         app:layout_constraintTop_toBottomOf="@+id/banner"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-         />
+        />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/fullName"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:ems="10"
-        android:hint="Email Address"
+        android:hint="Name"
 
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -59,6 +50,20 @@
         app:layout_constraintTop_toBottomOf="@+id/bannerDescription"
         />
     <!--        android:inputType="textEmailAdress"-->
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="Email Address"
+
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullName"
+        />
 
     <EditText
         android:id="@+id/password"
@@ -73,7 +78,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email"
         />
-    <!--        android:inputType="textPassword"-->
+          android:inputType="textPassword"-->
 
     <Button
         android:id="@+id/signIn"
@@ -81,7 +86,7 @@
         android:layout_height="70dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#0ED6B9"
-        android:text="Login"
+        android:text="Resister User"
         android:textColor="#ffffff"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -90,31 +95,6 @@
         app:layout_constraintTop_toBottomOf="@+id/password"
         />
 
-    <TextView
-        android:id="@+id/forgotPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Forgot Password?"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/signIn"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="50dp"
-        />
-
-    <TextView
-        android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRighttOf="@+id/forgotPassword"
-        app:layout_constraintRight_toRighttOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/forgotPassword"
-        tools:layout_editor_absoluteX="228dp"
-        tools:ignore="MissingConstraints" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -130,4 +110,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.499"
         tools:ignore="MissingConstraints" />
+
 </android.support.constraint.ConstraintLayout>
