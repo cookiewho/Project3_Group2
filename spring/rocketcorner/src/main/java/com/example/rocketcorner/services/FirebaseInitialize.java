@@ -21,7 +21,6 @@ public class FirebaseInitialize {
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://rocketcorner-85da2-default-rtdb.firebaseio.com")
                     .build();
 
             FirebaseApp.initializeApp(options);

@@ -13,6 +13,10 @@ public class User {
     private double balance;
     private HashMap<String, Integer> cart;
 
+    public User() {
+        super();
+    }
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

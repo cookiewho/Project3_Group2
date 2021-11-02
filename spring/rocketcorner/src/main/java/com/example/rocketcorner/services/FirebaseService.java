@@ -14,9 +14,6 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class FirebaseService {
 
-    public FirebaseService() {
-    }
-
     public List saveUserDetails(User user) throws InterruptedException, ExecutionException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         DocumentReference docRef = dbFirestore.collection("users").document();
@@ -34,6 +31,13 @@ public class FirebaseService {
         Query query = usersCollection.whereEqualTo("username", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-        return querySnapshot.get().getDocuments().get(0).getId();
+        return querySnapshot.get().getDocuments().get(0).getId().toString();
+    }
+
+    public String deleteUser (String userId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> deleteResult = dbFirestore.collection("users").document(userId).delete();
+
+        return deleteResult.get().getUpdateTime().toString();
     }
 }
