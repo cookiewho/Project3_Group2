@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StoreActivity extends AppCompatActivity {
-    List<String> items;
+    List<String> items; // this will change into a class with its own attributes
+    List<String> images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,8 @@ public class StoreActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.rvItems);
 
         items = new ArrayList<>();
-        final ItemAdapter adapter = new ItemAdapter(this, items);
+        images = new ArrayList<>();
+        final ItemAdapter adapter = new ItemAdapter(this, items, images);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
@@ -31,6 +33,9 @@ public class StoreActivity extends AppCompatActivity {
         items.add("Slowpoke Tail");
         items.add("Pikachu");
         items.add("Dragonair");
+        images.add("https://i.imgur.com/tySRzD6.jpg");
+        images.add("https://i.imgur.com/Zq0iBJK.jpg");
+        images.add("https://i.imgur.com/GrwUHJO.png");
         adapter.notifyDataSetChanged();
 
 
