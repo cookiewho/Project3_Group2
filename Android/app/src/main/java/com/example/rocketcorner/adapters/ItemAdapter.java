@@ -12,14 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rocketcorner.R;
 
+import java.util.List;
+
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     Context context;
     // TODO Create list of Items class & add to constructor
 
-    private String[] localDataSet;
-
-    public ItemAdapter(Context context){
+    private String[] localDataSet; // this will be replaced by list of Items
+    public List<String> items;
+    public ItemAdapter(Context context, List<String> items){
         this.context = context;
+        this.items = items;
     }
 
     // Create new views (invoked by the layout manager)
@@ -27,9 +30,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.shop_item, viewGroup, false);
-
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_row, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -40,7 +41,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getTextView().setText(localDataSet[position]);
+        viewHolder.getTextView().setText(items.get(position));
     }
 
     /**
@@ -52,7 +53,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         RelativeLayout container;
         // TODO May need to use glide to load images
 
-        public ViewHolder(View view) {
+        public ViewHolder(@NonNull View view) {
             super(view);
             // Define click listener for the ViewHolder's View
             container = itemView.findViewById(R.id.container);
@@ -64,21 +65,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         }
     }
 
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
-     */
-    public void CustomAdapter(String[] dataSet) {
-        localDataSet = dataSet;
-    }
+//    /**
+//     * Initialize the dataset of the Adapter.
+//     *
+//     * @param dataSet String[] containing the data to populate views to be used
+//     * by RecyclerView.
+//     */
+//    public void CustomAdapter(String[] dataSet) {
+//        localDataSet = dataSet;
+//    }
 
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localDataSet.length;
+        return items.size();
     }
 
 }
