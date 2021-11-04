@@ -30,8 +30,6 @@ public class FirebaseInitialize {
                 options = new FirebaseOptions.Builder()
                         .setCredentials(GoogleCredentials.fromStream(createFirebaseCredential()))
                         .build();
-
-                System.out.println("------- Firebase Initialized With Heroku -------");
             }
 
             FirebaseApp.initializeApp(options);
