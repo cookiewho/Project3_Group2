@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class FirebaseService {
+
+//    USER SERVICES
 
     public String saveUserDetails(User user) throws InterruptedException, ExecutionException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -34,12 +37,28 @@ public class FirebaseService {
         return querySnapshot.get().getDocuments().get(0).getId().toString();
     }
 
+    public HashMap<String, User> getAllUsers() throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> queryFuture = dbFirestore.collection("users").get();
+        List<QueryDocumentSnapshot> documents = queryFuture.get().getDocuments();
+
+        HashMap<String, User> response = new HashMap<>();
+        for (QueryDocumentSnapshot document: documents) {
+            String userID = document.getId();
+            User userObject = document.toObject(User.class);
+            response.put(userID, userObject);
+        }
+        return response;
+    }
+
     public String deleteUser (String userId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         ApiFuture<WriteResult> deleteResult = dbFirestore.collection("users").document(userId).delete();
 
         return deleteResult.get().getUpdateTime().toString();
     }
+
+//    PRODUCT SERVICES
 
     public  String saveProductDetails(Product prod) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
