@@ -29,7 +29,8 @@ public class userRoutes {
             userHashMap = firebaseService.getAllUsers();
             return new ResponseEntity<>(userHashMap, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
