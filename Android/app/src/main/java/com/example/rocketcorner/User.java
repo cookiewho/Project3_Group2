@@ -3,16 +3,16 @@ package com.example.rocketcorner;
 import java.util.HashMap;
 
 public class User {
-    private int id;
+//    private String id;
     private String username;
     private String email;
     private String password;
     private double balance;
     private HashMap<String, Integer> cart;
 
-    public int getId() {
-        return id;
-    }
+//    public String getId() {
+//        return id;
+//    }
 
     public String getUsername() {
         return username;
@@ -54,10 +54,14 @@ public class User {
         this.cart = cart;
     }
 
+    public User getAllUsers(){
+        return this;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                //"id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

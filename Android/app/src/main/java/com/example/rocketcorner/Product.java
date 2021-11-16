@@ -1,13 +1,13 @@
 package com.example.rocketcorner;
 
 public class Product {
-    private int id;
+    private String id;
     private String name;
     private String desc;
     private String imgLink;
     private double price;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
