@@ -31,7 +31,7 @@ public class UserRoutes {
         }
     }
 
-    @PutMapping("/updateUser")
+    @PatchMapping("/updateUser")
     public ResponseEntity<?> updateUser(@RequestParam String userId, @RequestParam String new_username, @RequestParam String new_email, @RequestParam String new_password) throws ExecutionException, InterruptedException {
         HashMap<String, User> userHashMap;
         HashMap<String, Object> updates = new HashMap<>();
@@ -50,7 +50,7 @@ public class UserRoutes {
         }
     }
 
-    @PutMapping("/getUser")
+    @GetMapping("/getUser")
     public ResponseEntity<?> getSpecificUser(@RequestParam String userId) throws ExecutionException, InterruptedException {
         HashMap<String, User> userHashMap;
 

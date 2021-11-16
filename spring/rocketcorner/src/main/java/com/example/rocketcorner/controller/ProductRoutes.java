@@ -33,7 +33,10 @@ public class ProductRoutes {
         return new ResponseEntity<>("Product id # goes here", HttpStatus.OK);
     }
 
+    //look into maybe using objectmapper for this one
     @PatchMapping("/products")
-    public ResponseEntity<?> updateProduct(@RequestParam String productId, @RequestParam)
+    public ResponseEntity<?> updateProduct(@RequestParam String productId, @RequestParam Optional<String> name, @RequestParam Optional<String> description, Optional<String> imageURL, Optional<Double> price) {
+        return new ResponseEntity<>(productId + " Updated", HttpStatus.OK);
+    }
 
 }
