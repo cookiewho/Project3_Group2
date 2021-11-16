@@ -28,40 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Testing retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        rocketAPI rocketApi = retrofit.create(rocketAPI.class);
-
-        System.out.println("==== USERS ====");
-
-        Call<Map<String, User>> call = rocketApi.getUserData();
-        call.enqueue(new Callback<Map<String, User>>() {
-            @Override
-            public void onResponse(Call<Map<String, User>> call, Response<Map<String, User>> response) {
-                if (!response.isSuccessful()) {
-                    Log.d("== Response ==", "Response is outside of the 200-300 range!");
-                    return;
-                }
-                // idea: create another class that returns the data of the dictionary
-                // load the map from the response and use that map for whatever??
-                Map<String, User> m = response.body();
-//                User u = m.get("th09DJpV5zP5lVWdcHFd");
-                for (Map.Entry entry : m.entrySet()){
-                    String id = (String)entry.getKey();
-                    User u = (User)entry.getValue();
-                    Log.d("== Response ==", id + "->" + u.toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Map<String, User>> call, Throwable t) {
-                Log.d("== ERROR ==", t.getMessage());
-            }
-        });
-
         button = findViewById(R.id.test);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
