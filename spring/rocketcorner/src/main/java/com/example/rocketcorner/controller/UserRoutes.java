@@ -14,11 +14,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-public class userRoutes {
-
+public class UserRoutes {
     @Autowired
     FirebaseService firebaseService;
-
 
     @GetMapping("/getAllUsers")
     public ResponseEntity<?> getAllUsers() throws ExecutionException, InterruptedException {
@@ -63,5 +61,10 @@ public class userRoutes {
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/newUser")
+    public ResponseEntity<?> newUser(@RequestParam String username, @RequestParam String password) {
+        return new ResponseEntity<>("Unique User Id # Here", HttpStatus.OK);
     }
 }
