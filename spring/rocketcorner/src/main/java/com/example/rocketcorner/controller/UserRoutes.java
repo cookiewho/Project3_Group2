@@ -69,8 +69,17 @@ public class UserRoutes {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws ExecutionException, InterruptedException {
+        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+        for( Map.Entry<String, User> entry : allUsersHash.entrySet()){
+            if(entry.getValue().getUsername().equals(username)){
+                if(entry.getValue().getPassword().equals(password)){
+
+                    return new ResponseEntity<>(entry.getKey(), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>("Invalid Login Credentials", HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/deleteUser")
