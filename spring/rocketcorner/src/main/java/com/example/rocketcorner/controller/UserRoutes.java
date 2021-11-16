@@ -67,4 +67,15 @@ public class UserRoutes {
     public ResponseEntity<?> newUser(@RequestParam String username, @RequestParam String password) {
         return new ResponseEntity<>("Unique User Id # Here", HttpStatus.OK);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password)  {
+        return new ResponseEntity<>(userId + " Deleted", HttpStatus.OK);
+    }
+
 }

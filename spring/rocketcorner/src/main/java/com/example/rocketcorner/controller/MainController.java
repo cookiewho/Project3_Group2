@@ -12,16 +12,6 @@ public class MainController {
         return new ResponseEntity<>("Hello everyone", HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password)  {
-        return new ResponseEntity<>(userId + " Deleted", HttpStatus.OK);
-    }
-
     @PostMapping("/purchase")
     public ResponseEntity<?> purchase(@RequestParam String userID, @RequestParam String password, @RequestParam String itemname) {
         return new ResponseEntity<>("userID purchaseditem", HttpStatus.OK);
