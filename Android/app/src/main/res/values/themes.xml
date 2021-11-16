@@ -16,4 +16,11 @@
         <item name="android:colorAccent">#ffff</item>
         <item name="android:textColorHint">#ffff</item>
     </style>
+    <style name="Theme.RocketCorner.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.RocketCorner.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.RocketCorner.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

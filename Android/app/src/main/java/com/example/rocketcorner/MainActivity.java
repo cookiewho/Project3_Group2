@@ -28,6 +28,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+// import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +55,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+=======
+        button = findViewById(R.id.test);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadStore(view);
+            }
+        });
+    }
+
+    private void loadStore(View view){
+        Intent intent = StoreActivity.getIntent(getApplicationContext());
+        startActivity(intent);
+    }
+
+    public static Intent getIntent(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
     }
 
     @Override
