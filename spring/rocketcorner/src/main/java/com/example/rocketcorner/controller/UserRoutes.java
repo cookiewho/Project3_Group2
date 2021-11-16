@@ -79,7 +79,7 @@ public class UserRoutes {
                 }
             }
         }
-        return new ResponseEntity<>("Invalid Login Credentials", HttpStatus.OK);
+        return new ResponseEntity<>("Invalid Login Credentials", HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/deleteUser")
