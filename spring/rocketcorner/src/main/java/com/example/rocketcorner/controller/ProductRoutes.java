@@ -19,6 +19,18 @@ public class ProductRoutes {
     @Autowired
     FirebaseService firebaseService;
 
+    @GetMapping("/getAllProducts")
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            return new ResponseEntity<>(firebaseService.getAllProducts(), HttpStatus.OK);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @GetMapping("/products")
     public ResponseEntity<?> items(@RequestParam Optional<String> name) {
         if(name.isPresent()) {

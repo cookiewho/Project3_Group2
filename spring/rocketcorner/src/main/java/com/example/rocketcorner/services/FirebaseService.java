@@ -109,4 +109,18 @@ public class FirebaseService {
 
         return deleteResult.get().getUpdateTime().toString();
     }
+
+    public HashMap<String, Product> getAllProducts() throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> queryFuture = dbFirestore.collection("products").get();
+        List<QueryDocumentSnapshot> documents = queryFuture.get().getDocuments();
+
+        HashMap<String, Product> response = new HashMap<>();
+        for (QueryDocumentSnapshot document: documents) {
+            String productID = document.getId();
+            Product userObject = document.toObject(Product.class);
+            response.put(productID, userObject);
+        }
+        return response;
+    }
 }
