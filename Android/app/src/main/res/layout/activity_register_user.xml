@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/rocketc"
+
     tools:context=".RegisterUser">
 
     <TextView
@@ -11,23 +13,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:fontFamily="sans-serif-black"
-        android:text="App Name!"
+        android:fontFamily="@font/gotham"
+        android:text="Rocket Corner"
         android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#ffffff"
+
         android:textSize="60sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.113" />
+
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/bannerDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This app is an app!"
+        android:text="Sign up here!"
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="italic"
@@ -43,7 +49,7 @@
         android:layout_marginTop="60dp"
         android:ems="10"
         android:hint="Name"
-
+        android:textColorHint="#ffff"
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -58,6 +64,7 @@
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="Email Address"
+        android:textColorHint="#ffff"
 
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -72,6 +79,7 @@
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="Password"
+        android:textColorHint="#ffff"
 
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -86,10 +94,12 @@
         android:layout_height="70dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#0ED6B9"
+        android:background="@drawable/bg_button_white"
+
         android:text="Resister User"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="#ffff"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"

@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -93,6 +94,9 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
 
 
         progressBar.setVisibility(View.VISIBLE);
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.createUserWithEmailAndPassword("test@gmail.com", "123456");
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -101,7 +105,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
                         if(task.isSuccessful()){
                             User user = new User(fullName, email);
 
-                            FirebaseDatabase.getInstance().getReference("users")
+                            FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
