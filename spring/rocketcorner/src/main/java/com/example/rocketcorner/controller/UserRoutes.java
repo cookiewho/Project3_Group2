@@ -14,11 +14,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-public class userRoutes {
-
+public class UserRoutes {
     @Autowired
     FirebaseService firebaseService;
-
 
     @GetMapping("/getAllUsers")
     public ResponseEntity<?> getAllUsers() throws ExecutionException, InterruptedException {
@@ -33,7 +31,7 @@ public class userRoutes {
         }
     }
 
-    @PutMapping("/updateUser")
+    @PatchMapping("/updateUser")
     public ResponseEntity<?> updateUser(@RequestParam String userId, @RequestParam String new_username, @RequestParam String new_email, @RequestParam String new_password) throws ExecutionException, InterruptedException {
         HashMap<String, User> userHashMap;
         HashMap<String, Object> updates = new HashMap<>();
@@ -52,7 +50,7 @@ public class userRoutes {
         }
     }
 
-    @PutMapping("/getUser")
+    @GetMapping("/getUser")
     public ResponseEntity<?> getSpecificUser(@RequestParam String userId) throws ExecutionException, InterruptedException {
         HashMap<String, User> userHashMap;
 
@@ -64,4 +62,20 @@ public class userRoutes {
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/newUser")
+    public ResponseEntity<?> newUser(@RequestParam String username, @RequestParam String password) {
+        return new ResponseEntity<>("Unique User Id # Here", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password)  {
+        return new ResponseEntity<>(userId + " Deleted", HttpStatus.OK);
+    }
+
 }
