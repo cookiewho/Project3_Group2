@@ -42,8 +42,10 @@ public class UserRoutes {
 
         try {
             String userId_updated = firebaseService.updateUserDetails(userId, updates);
-            userHashMap = firebaseService.getUser(userId_updated);
-            return new ResponseEntity<>(userHashMap, HttpStatus.OK);
+            if(userId_updated != null) {
+                return new ResponseEntity<>(userId_updated, HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,7 +58,10 @@ public class UserRoutes {
 
         try {
             userHashMap = firebaseService.getUser(userId);
-            return new ResponseEntity<>(userHashMap, HttpStatus.OK);
+            if(userHashMap != null) {
+                return new ResponseEntity<>(userHashMap, HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -69,8 +74,17 @@ public class UserRoutes {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws ExecutionException, InterruptedException {
+        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+        for( Map.Entry<String, User> entry : allUsersHash.entrySet()){
+            if(entry.getValue().getUsername().equals(username)){
+                if(entry.getValue().getPassword().equals(password)){
+
+                    return new ResponseEntity<>(entry.getKey(), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>("Invalid Login Credentials", HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/deleteUser")
