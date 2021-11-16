@@ -8,5 +8,7 @@ import retrofit2.http.GET;
 
 public interface rocketAPI {
     @GET("getAllUsers")
-    Call<Map<String, User>> getData();
+    Call<Map<String, User>> getUserData();
+    @GET("getAllProducts")
+    Call<Map<String, Product>> getProdData();
 }
