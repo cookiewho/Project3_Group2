@@ -51,4 +51,17 @@ public class userRoutes {
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/getUser")
+    public ResponseEntity<?> getSpecificUser(@RequestParam String userId) throws ExecutionException, InterruptedException {
+        HashMap<String, User> userHashMap;
+
+        try {
+            userHashMap = firebaseService.getUser(userId);
+            return new ResponseEntity<>(userHashMap, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
