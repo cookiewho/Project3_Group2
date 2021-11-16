@@ -17,7 +17,7 @@ public class MainController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    @DeleteMapping("/logout")
+    @DeleteMapping("/deleteUser")
     public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password)  {
         return new ResponseEntity<>(userId + " Deleted", HttpStatus.OK);
     }
