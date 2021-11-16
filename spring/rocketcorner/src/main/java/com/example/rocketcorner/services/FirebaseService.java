@@ -26,6 +26,14 @@ public class FirebaseService {
         return docRef.getId().toString();
     }
 
+    public String updateUserDetails(String userId, HashMap<String, Object> updates) throws InterruptedException, ExecutionException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        DocumentReference IDdocRef = dbFirestore.collection("users").document(userId);
+        ApiFuture<WriteResult> collectionsApiFuture = IDdocRef.update(updates);
+
+        return IDdocRef.getId().toString();
+    }
+
     public String getUserId(String username) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference usersCollection = dbFirestore.collection("users");
@@ -48,6 +56,22 @@ public class FirebaseService {
             User userObject = document.toObject(User.class);
             response.put(userID, userObject);
         }
+        return response;
+    }
+
+    public HashMap<String, User> getUser (String userId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<DocumentSnapshot> result = dbFirestore.collection("users").document(userId).get();
+
+        HashMap<String, User> response = new HashMap<>();
+        try {
+            String userID = result.get().getId();
+            User userObject = result.get().toObject(User.class);
+            response.put(userID, userObject);
+        } catch (Exception e){
+            return null;
+        }
+
         return response;
     }
 
