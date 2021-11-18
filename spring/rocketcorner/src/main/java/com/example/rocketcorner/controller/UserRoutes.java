@@ -94,21 +94,35 @@ public class UserRoutes {
     }
 
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password) throws ExecutionException, InterruptedException {
+    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password, @RequestParam(required = false) String adminId) throws ExecutionException, InterruptedException {
         try {
-            HashMap<String, User> userHash = firebaseService.getUser(userId);
-            if (userHash != null){
-                for(Map.Entry<String, User> entry : userHash.entrySet()){
-                    if(entry.getValue().getPassword().equals(password) || password.equals(Admin.ADMIN_PASSWORD)){
-                        boolean userDeleted = firebaseService.deleteUser(userId);
-                        if (userDeleted) {
-                            return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
+            boolean verified = false;
+            if (adminId != null && adminId.equals(Admin.ADMIN_ID)){
+                if(password.equals(Admin.ADMIN_PASSWORD)){
+                    verified = true;
+                }
+            } else {
+                HashMap<String, User> userHash = firebaseService.getUser(userId);
+                if (userHash != null) {
+                    for (Map.Entry<String, User> entry : userHash.entrySet()) {
+                        if (entry.getValue().getPassword().equals(password)) {
+                            verified = true;
                         }
                     }
-                    return new ResponseEntity<>("Invalid Authorization", HttpStatus.UNAUTHORIZED);
+                } else{
+                    return new ResponseEntity<>("INVALID USER ID", HttpStatus.FORBIDDEN);
                 }
             }
-            return new ResponseEntity<>("UNABLE TO DELETE USER", HttpStatus.FORBIDDEN);
+
+            if (verified){
+                boolean userDeleted = firebaseService.deleteUser(userId);
+                if (userDeleted) {
+                    return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
+                }
+                return new ResponseEntity<>("UNABLE TO DELETE USER", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>("Invalid Authorization", HttpStatus.UNAUTHORIZED);
+
         } catch (Exception e){
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
