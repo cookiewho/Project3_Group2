@@ -29,9 +29,13 @@ public class FirebaseService {
     public String updateUserDetails(String userId, HashMap<String, Object> updates) throws InterruptedException, ExecutionException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         DocumentReference IDdocRef = dbFirestore.collection("users").document(userId);
-        ApiFuture<WriteResult> collectionsApiFuture = IDdocRef.update(updates);
-
-        return IDdocRef.getId().toString();
+        DocumentSnapshot docSnap = (DocumentSnapshot) IDdocRef.get();
+        if(docSnap.exists()) {
+            ApiFuture<WriteResult> collectionsApiFuture = IDdocRef.update(updates);
+            return IDdocRef.getId().toString();
+        } else {
+            return null;
+        }
     }
 
     public String getUserId(String username) throws ExecutionException, InterruptedException {
@@ -63,16 +67,21 @@ public class FirebaseService {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         ApiFuture<DocumentSnapshot> result = dbFirestore.collection("users").document(userId).get();
 
-        HashMap<String, User> response = new HashMap<>();
-        try {
-            String userID = result.get().getId();
-            User userObject = result.get().toObject(User.class);
-            response.put(userID, userObject);
-        } catch (Exception e){
+
+        DocumentSnapshot docSnap = (DocumentSnapshot) result.get();
+        if(docSnap.exists()) {
+            HashMap<String, User> response = new HashMap<>();
+            try {
+                String userID = result.get().getId();
+                User userObject = result.get().toObject(User.class);
+                response.put(userID, userObject);
+                return response;
+            } catch (Exception e) {
+                throw e;
+            }
+        } else{
             return null;
         }
-
-        return response;
     }
 
     public String deleteUser (String userId) throws ExecutionException, InterruptedException {

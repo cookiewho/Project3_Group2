@@ -42,8 +42,10 @@ public class UserRoutes {
 
         try {
             String userId_updated = firebaseService.updateUserDetails(userId, updates);
-            userHashMap = firebaseService.getUser(userId_updated);
-            return new ResponseEntity<>(userHashMap, HttpStatus.OK);
+            if(userId_updated != null) {
+                return new ResponseEntity<>(userId_updated, HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,7 +58,10 @@ public class UserRoutes {
 
         try {
             userHashMap = firebaseService.getUser(userId);
-            return new ResponseEntity<>(userHashMap, HttpStatus.OK);
+            if(userHashMap != null) {
+                return new ResponseEntity<>(userHashMap, HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
