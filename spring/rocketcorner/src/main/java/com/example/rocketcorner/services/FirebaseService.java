@@ -19,76 +19,109 @@ public class FirebaseService {
 //    USER SERVICES
 
     public String saveUserDetails(User user) throws InterruptedException, ExecutionException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        DocumentReference docRef = dbFirestore.collection("users").document();
-        ApiFuture<WriteResult> collectionsApiFuture = docRef.set(user);
+        try{
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            DocumentReference docRef = dbFirestore.collection("users").document();
+            ApiFuture<WriteResult> collectionsApiFuture = docRef.set(user);
 
-        return docRef.getId().toString();
+            return docRef.getId().toString();
+        } catch (Exception e){
+            throw e;
+        }
     }
 
     public String updateUserDetails(String userId, HashMap<String, Object> updates) throws InterruptedException, ExecutionException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        DocumentReference IDdocRef = dbFirestore.collection("users").document(userId);
-        DocumentSnapshot docSnap = (DocumentSnapshot) IDdocRef.get();
-        if(docSnap.exists()) {
-            ApiFuture<WriteResult> collectionsApiFuture = IDdocRef.update(updates);
-            return IDdocRef.getId().toString();
-        } else {
-            return null;
+        try {
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            DocumentReference IDdocRef = dbFirestore.collection("users").document(userId);
+
+            DocumentSnapshot docSnap = IDdocRef.get().get();
+            if (docSnap.exists()) {
+                ApiFuture<WriteResult> collectionsApiFuture = IDdocRef.update(updates);
+                return IDdocRef.getId().toString();
+            } else {
+                return null;
+            }
+        } catch (Exception e){
+            throw e;
         }
     }
 
     public String getUserId(String username) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        CollectionReference usersCollection = dbFirestore.collection("users");
-        Query query = usersCollection.whereEqualTo("username", username);
-        ApiFuture<QuerySnapshot> querySnapshot = query.get();
-        if(querySnapshot.get().getDocuments().size() == 0){
-            return null;
+        try{
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            CollectionReference usersCollection = dbFirestore.collection("users");
+
+            Query query = usersCollection.whereEqualTo("username", username);
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            if(querySnapshot.get().getDocuments().size() == 0){
+                return null;
+            }
+
+            return querySnapshot.get().getDocuments().get(0).getId().toString();
+        } catch (Exception e){
+            throw e;
         }
-        return querySnapshot.get().getDocuments().get(0).getId().toString();
     }
 
     public HashMap<String, User> getAllUsers() throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<QuerySnapshot> queryFuture = dbFirestore.collection("users").get();
-        List<QueryDocumentSnapshot> documents = queryFuture.get().getDocuments();
+        try{
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            ApiFuture<QuerySnapshot> queryFuture = dbFirestore.collection("users").get();
+            List<QueryDocumentSnapshot> documents = queryFuture.get().getDocuments();
 
-        HashMap<String, User> response = new HashMap<>();
-        for (QueryDocumentSnapshot document: documents) {
-            String userID = document.getId();
-            User userObject = document.toObject(User.class);
-            response.put(userID, userObject);
+            HashMap<String, User> response = new HashMap<>();
+            for (QueryDocumentSnapshot document: documents) {
+                String userID = document.getId();
+                User userObject = document.toObject(User.class);
+                response.put(userID, userObject);
+            }
+            return response;
+        } catch (Exception e){
+            throw e;
         }
-        return response;
     }
 
     public HashMap<String, User> getUser (String userId) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<DocumentSnapshot> result = dbFirestore.collection("users").document(userId).get();
+        try{
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            ApiFuture<DocumentSnapshot> result = dbFirestore.collection("users").document(userId).get();
 
 
-        DocumentSnapshot docSnap = (DocumentSnapshot) result.get();
-        if(docSnap.exists()) {
-            HashMap<String, User> response = new HashMap<>();
-            try {
-                String userID = result.get().getId();
-                User userObject = result.get().toObject(User.class);
-                response.put(userID, userObject);
-                return response;
-            } catch (Exception e) {
-                throw e;
+            DocumentSnapshot docSnap = (DocumentSnapshot) result.get();
+            if(docSnap.exists()) {
+                HashMap<String, User> response = new HashMap<>();
+                try {
+                    String userID = result.get().getId();
+                    User userObject = result.get().toObject(User.class);
+                    response.put(userID, userObject);
+                    return response;
+                } catch (Exception e) {
+                    throw e;
+                }
             }
-        } else{
+
             return null;
+        } catch (Exception e){
+            throw e;
         }
     }
 
-    public String deleteUser (String userId) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> deleteResult = dbFirestore.collection("users").document(userId).delete();
+    public boolean deleteUser (String userId) throws ExecutionException, InterruptedException {
+        try{
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            DocumentReference docRef = dbFirestore.collection("users").document(userId);
+            DocumentSnapshot docSnap = docRef.get().get();
 
-        return deleteResult.get().getUpdateTime().toString();
+            if(docSnap.exists()) {
+                ApiFuture<WriteResult> deleteResult = docRef.delete();
+                return true;
+            }
+            return false;
+
+        } catch (Exception e){
+            throw e;
+        }
     }
 
 //    PRODUCT SERVICES

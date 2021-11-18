@@ -63,10 +63,10 @@ public class FirebaseServiceTest {
         assertEquals(gottenUser.getPassword(), "NEWsecurePassword");
 
 //      Delete created user
-        String time = firebaseService.deleteUser(userId);
+        boolean userDeleted = firebaseService.deleteUser(userId);
         String deleted_userId = firebaseService.getUserId("testUser");
 
-        assertNotNull(time);
+        assertTrue(userDeleted);
         assertNull(deleted_userId);
     }
 
