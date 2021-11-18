@@ -1,5 +1,6 @@
 package com.example.rocketcorner.controller;
 
+import com.example.rocketcorner.objects.Admin;
 import com.example.rocketcorner.objects.User;
 import com.example.rocketcorner.services.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,16 +94,24 @@ public class UserRoutes {
     }
 
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam String userId) throws ExecutionException, InterruptedException {
+    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password) throws ExecutionException, InterruptedException {
         try {
-            boolean userDeleted = firebaseService.deleteUser(userId);
-            if (userDeleted) {
-                return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
+            HashMap<String, User> userHash = firebaseService.getUser(userId);
+            if (userHash != null){
+                for(Map.Entry<String, User> entry : userHash.entrySet()){
+                    if(entry.getValue().getPassword().equals(password) || password.equals(Admin.ADMIN_PASSWORD)){
+                        boolean userDeleted = firebaseService.deleteUser(userId);
+                        if (userDeleted) {
+                            return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
+                        }
+                    }
+                    return new ResponseEntity<>("Invalid Authorization", HttpStatus.UNAUTHORIZED);
+                }
             }
             return new ResponseEntity<>("UNABLE TO DELETE USER", HttpStatus.FORBIDDEN);
         } catch (Exception e){
             System.out.print(e);
-            return new ResponseEntity<>("OOPSIES", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
