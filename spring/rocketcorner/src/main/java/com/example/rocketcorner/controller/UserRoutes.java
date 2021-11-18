@@ -75,29 +75,34 @@ public class UserRoutes {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws ExecutionException, InterruptedException {
-        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
-        for( Map.Entry<String, User> entry : allUsersHash.entrySet()){
-            if(entry.getValue().getUsername().equals(username)){
-                if(entry.getValue().getPassword().equals(password)){
+        try {
+            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+            for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
+                if (entry.getValue().getUsername().equals(username)) {
+                    if (entry.getValue().getPassword().equals(password)) {
 
-                    return new ResponseEntity<>(entry.getKey(), HttpStatus.OK);
+                        return new ResponseEntity<>(entry.getKey(), HttpStatus.OK);
+                    }
                 }
             }
+            return new ResponseEntity<>("Invalid Login Credentials", HttpStatus.FORBIDDEN);
+        } catch (Exception e){
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("Invalid Login Credentials", HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password) throws ExecutionException, InterruptedException {
+    public ResponseEntity<?> deleteUser(@RequestParam String userId) throws ExecutionException, InterruptedException {
         try {
             boolean userDeleted = firebaseService.deleteUser(userId);
             if (userDeleted) {
                 return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
             }
-            return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("UNABLE TO DELETE USER", HttpStatus.FORBIDDEN);
         } catch (Exception e){
             System.out.print(e);
-            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("OOPSIES", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
