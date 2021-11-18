@@ -83,8 +83,17 @@ public class UserRoutes {
     }
 
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password)  {
-        return new ResponseEntity<>(userId + " Deleted", HttpStatus.OK);
+    public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password) throws ExecutionException, InterruptedException {
+        try {
+            boolean userDeleted = firebaseService.deleteUser(userId);
+            if (userDeleted) {
+                return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+        } catch (Exception e){
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

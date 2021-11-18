@@ -75,11 +75,16 @@ public class FirebaseService {
         return response;
     }
 
-    public String deleteUser (String userId) throws ExecutionException, InterruptedException {
+    public boolean deleteUser (String userId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> deleteResult = dbFirestore.collection("users").document(userId).delete();
+        DocumentReference docRef = dbFirestore.collection("users").document(userId);
+        DocumentSnapshot docSnap = (DocumentSnapshot) docRef.get();
 
-        return deleteResult.get().getUpdateTime().toString();
+        if(docSnap.exists()) {
+            ApiFuture<WriteResult> deleteResult = docRef.delete();
+            return true;
+        }
+        return false;
     }
 
 //    PRODUCT SERVICES
