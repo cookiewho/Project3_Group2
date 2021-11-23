@@ -59,21 +59,31 @@ public class User {
         this.cart = cart;
     }
 
-
     // iterate through cart
+//    @Override
+//    public String toString() {
+//        String s = "User{" +
+//                ", username='" + username + '\'' +
+//                ", email='" + email + '\'' +
+//                ", password='" + password + '\'' +
+//                ", balance=" + balance +
+//                ", cart = ";
+//
+//        for (Map.Entry<String, Integer> entry : cart.entrySet()) {
+//            s += "\t Key:" + entry.getKey() + " Value:" + entry.getValue() + "\n";
+//        }
+//
+//        return s;
+//    }
+
     @Override
     public String toString() {
-        String s = "User{" +
-                ", username='" + username + '\'' +
+        return "User{" +
+                "username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", balance=" + balance +
-                ", cart = ";
-
-        for (Map.Entry<String, Integer> entry : cart.entrySet()) {
-            s += "\t Key:" + entry.getKey() + " Value:" + entry.getValue() + "\n";
-        }
-
-        return s;
+                ", cart=" + cart +
+                '}';
     }
 }
