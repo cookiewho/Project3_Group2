@@ -4,11 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String username;
-    private String email;
+    public String username;
+    public String email;
     private String password;
     private double balance;
     private HashMap<String, Integer> cart;
+
+    public User() {
+
+    }
+
+    public User(String fullName, String email) {
+        this.username = fullName;
+        this.email = email;
+    }
 
     public String getUsername() {
         return username;
@@ -50,9 +59,6 @@ public class User {
         this.cart = cart;
     }
 
-    public User getAllUsers(){
-        return this;
-    }
 
     // iterate through cart
     @Override
@@ -64,7 +70,7 @@ public class User {
                 ", balance=" + balance +
                 ", cart = ";
 
-        for (Map.Entry<String, Integer> entry: cart.entrySet()){
+        for (Map.Entry<String, Integer> entry : cart.entrySet()) {
             s += "\t Key:" + entry.getKey() + " Value:" + entry.getValue() + "\n";
         }
 

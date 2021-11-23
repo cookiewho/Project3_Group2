@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -38,11 +39,34 @@ public class FirebaseServiceTest {
         //assert that Ids match
         assertEquals(addedUserId, userId);
 
+//      Updating user
+        HashMap<String, Object> updates = new HashMap<>();
+
+        updates.put("username", "NEWtestUser");
+        updates.put("email", "NEWemail@test.com");
+        updates.put("password", "NEWsecurePassword");
+
+        String updatedUser_Id = firebaseService.updateUserDetails(userId, updates);
+        TimeUnit.SECONDS.sleep(5);
+        //assert that Ids match
+        assertEquals(addedUserId, updatedUser_Id);
+        assertEquals(userId, updatedUser_Id);
+
+//      Get specific user
+        HashMap<String, User> resp = firebaseService.getUser(userId);
+        //assert that keys stayed the same
+        resp.containsKey(userId);
+        User gottenUser = resp.get(userId);
+        //assert that user received matches what was entered
+        assertEquals(gottenUser.getUsername(), "NEWtestUser");
+        assertEquals(gottenUser.getEmail(), "NEWemail@test.com");
+        assertEquals(gottenUser.getPassword(), "NEWsecurePassword");
+
 //      Delete created user
-        String time = firebaseService.deleteUser(userId);
+        boolean userDeleted = firebaseService.deleteUser(userId);
         String deleted_userId = firebaseService.getUserId("testUser");
 
-        assertNotNull(time);
+        assertTrue(userDeleted);
         assertNull(deleted_userId);
     }
 
