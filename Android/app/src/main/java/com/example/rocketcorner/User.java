@@ -1,6 +1,7 @@
 package com.example.rocketcorner;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class User {
     private String username;
@@ -56,12 +57,17 @@ public class User {
     // iterate through cart
     @Override
     public String toString() {
-        return "User{" +
+        String s = "User{" +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", balance=" + balance +
-                ", cart=" + cart +
-                '}';
+                ", cart = ";
+
+        for (Map.Entry<String, Integer> entry: cart.entrySet()){
+            s += "\t Key:" + entry.getKey() + " Value:" + entry.getValue() + "\n";
+        }
+
+        return s;
     }
 }
