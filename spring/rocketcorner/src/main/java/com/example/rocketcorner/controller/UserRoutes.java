@@ -70,8 +70,41 @@ public class UserRoutes {
     }
 
     @PostMapping("/newUser")
-    public ResponseEntity<?> newUser(@RequestParam String username, @RequestParam String password) {
-        return new ResponseEntity<>("Unique User Id # Here", HttpStatus.OK);
+    public ResponseEntity<?> newUser(@RequestParam String username, @RequestParam String email, @RequestParam String password) throws ExecutionException, InterruptedException {
+        try{
+            // ENSURE CREDENTIALS ARE VALID
+            String inValidMsg = "";
+            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+            for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
+                if (entry.getValue().getUsername().equals(username)) {
+                    if(inValidMsg.length() == 0){
+                        inValidMsg += "ERROR: ";
+                    }
+
+                    inValidMsg += "Username is already taken. ";
+                }
+
+                if (entry.getValue().getEmail().equals(email)) {
+                    if(inValidMsg.length() == 0){
+                        inValidMsg += "ERROR: ";
+                    }
+
+                    inValidMsg += "Email is already taken. ";
+                }
+            }
+            if(inValidMsg.length() != 0){
+                return new ResponseEntity<>(inValidMsg, HttpStatus.FORBIDDEN);
+            }
+
+            // ONCE CREDENTAILS VALIDATED CREATE USER
+            User newUser = new User(username, email, password);
+            String userId = firebaseService.saveUserDetails(newUser);
+            return new ResponseEntity<>(userId, HttpStatus.OK);
+
+        } catch (Exception e){
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/login")
@@ -128,5 +161,26 @@ public class UserRoutes {
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public boolean validateUsername(String newUsername) throws ExecutionException, InterruptedException {
+        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+        for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
+            if (entry.getValue().getUsername().equals(newUsername)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validateEmail(String newEmail) throws ExecutionException, InterruptedException {
+        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+        for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
+            if (entry.getValue().getEmail().equals(newEmail)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 }
