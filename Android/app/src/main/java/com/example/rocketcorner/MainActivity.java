@@ -104,20 +104,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editTextPassword.requestFocus();
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth = FirebaseAuth.getInstance();
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+        Intent intent = profileActivity.getIntent(getApplicationContext());
+        startActivity(intent);
 
-                if(task.isSuccessful()){
-                    startActivity(new Intent(MainActivity.this, profileActivity.class));
-                }else{
-                    Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+//        progressBar.setVisibility(View.VISIBLE);
+//        mAuth = FirebaseAuth.getInstance();
+//
+//        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//
+//                if(task.isSuccessful()){
+//                    startActivity(new Intent(MainActivity.this, profileActivity.class));
+//                }else{
+//                    Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
 
     }
 
