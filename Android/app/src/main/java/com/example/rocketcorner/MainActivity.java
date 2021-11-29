@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button signIn;
 
     private FirebaseAuth mAuth;
-    private ProgressBar progressBar;
+//    private ProgressBar progressBar;
     private Button button;
 
     @Override
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 //        button = findViewById(R.id.test);
 //        button.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editTextPassword.requestFocus();
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
