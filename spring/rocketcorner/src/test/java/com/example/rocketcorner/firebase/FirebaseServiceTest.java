@@ -101,7 +101,8 @@ public class FirebaseServiceTest {
 
 //      Delete created user
         String time = firebaseService.deleteProduct(prodId);
-        String deleted_prodId = firebaseService.getProductId("testProd");
+        TimeUnit.SECONDS.sleep(5);
+        String deleted_prodId = firebaseService.getProductId("testProd123456789");
         TimeUnit.SECONDS.sleep(5);
         assertNotNull(time);
         assertNull(deleted_prodId);
