@@ -72,23 +72,37 @@ public class FirebaseServiceTest {
 
     @Test
     public void productFirebaseTests() throws ExecutionException, InterruptedException {
-//      Creating a new user
-        Product newProd = new Product("testProd", "Super useful test", "https://pm1.narvii.com/6752/d1bb17cb74d2d46355a957890c2e015b81c78165v2_hq.jpg", 34.99);
+//      Creating a new product
+        Product newProd = new Product("testProd123456789", "Super useful test", "https://pm1.narvii.com/6752/d1bb17cb74d2d46355a957890c2e015b81c78165v2_hq.jpg", 34.99);
         String addedProductId = firebaseService.saveProductDetails(newProd);
         TimeUnit.SECONDS.sleep(5);
         //assert that we get a valid return
         assertNotNull(addedProductId);
 
-//      Retreiving that user
-        String prodId = firebaseService.getProductId("testProd");
+//      Retrieving that product
+        String prodId = firebaseService.getProductId("testProd123456789");
         TimeUnit.SECONDS.sleep(5);
         //assert that Ids match
         assertEquals(addedProductId, prodId);
 
+//      Updating that product
+
+        newProd.setName("name2");
+        newProd.setDesc("Super duper useful test");
+        newProd.setImgLink("https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/1200px-Pok%C3%A9_Ball_icon.svg.png");
+        newProd.setPrice(2);
+        firebaseService.updateProductDetails(prodId, newProd);
+        TimeUnit.SECONDS.sleep(5);
+        HashMap<String, Product> myMap = firebaseService.getProduct(prodId);
+        assertEquals(myMap.get(prodId).getName(), "name2");
+        assertEquals(myMap.get(prodId).getDesc(), "Super duper useful test");
+        assertEquals(myMap.get(prodId).getImgLink(), "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/1200px-Pok%C3%A9_Ball_icon.svg.png");
+        assertEquals(myMap.get(prodId).getPrice(), 2);
+
 //      Delete created user
         String time = firebaseService.deleteProduct(prodId);
         String deleted_prodId = firebaseService.getProductId("testProd");
-
+        TimeUnit.SECONDS.sleep(5);
         assertNotNull(time);
         assertNull(deleted_prodId);
     }
