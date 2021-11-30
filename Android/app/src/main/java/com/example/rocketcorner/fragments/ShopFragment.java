@@ -1,15 +1,24 @@
 package com.example.rocketcorner.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rocketcorner.R;
+import com.example.rocketcorner.StoreActivity;
+import com.example.rocketcorner.adapters.ItemAdapter;
+import com.example.rocketcorner.profileActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +59,7 @@ public class ShopFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -62,6 +71,23 @@ public class ShopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_shop, container, false);
+        View view = inflater.inflate(R.layout.fragment_shop, container, false);
+        RecyclerView rv = view.findViewById(R.id.rvItems);
+        
+        List<String>  items = new ArrayList<>();
+        List<String> images = new ArrayList<>();
+        final ItemAdapter adapter = new ItemAdapter(view.getContext(), items, images);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        items.add("Slowpoke Tail");
+        items.add("Pikachu");
+        items.add("Dragonair");
+        images.add("https://i.imgur.com/tySRzD6.jpg");
+        images.add("https://i.imgur.com/Zq0iBJK.jpg");
+        images.add("https://i.imgur.com/GrwUHJO.png");
+        adapter.notifyDataSetChanged();
+
+        return view;
     }
 }
