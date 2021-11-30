@@ -3,6 +3,7 @@ package com.example.rocketcorner.controller;
 import com.example.rocketcorner.objects.Admin;
 import com.example.rocketcorner.objects.User;
 import com.example.rocketcorner.services.FirebaseService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -136,7 +137,7 @@ public class UserRoutes {
                 }
             }
 
-            if (verified){
+            if (verified && !userId.equals(Admin.ADMIN_ID)){
                 boolean userDeleted = firebaseService.deleteUser(userId);
                 if (userDeleted) {
                     return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
@@ -150,6 +151,27 @@ public class UserRoutes {
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping("/updateCart")
+    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Integer> cartUpdatesMap = mapper.readValue(cartUpdatesMapStr, Map.class);
+
+
+
+            Map<String, Integer> updatedCart = firebaseService.updateCart(userId, cartUpdatesMap);
+            if(updatedCart != null) {
+                return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
     public String duplicateCreds(String username, String email, String id) throws ExecutionException, InterruptedException {
         try {
