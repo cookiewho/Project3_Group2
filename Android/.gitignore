@@ -15,7 +15,7 @@
 local.properties
 
 
-# Created by https://www.toptal.com/developers/gitignore/api/androidstudio,macos,android,jetbrains+all,windows,java
+# Created by https://www.toptal.com/developers/gitignore/rocketApi/androidstudio,macos,android,jetbrains+all,windows,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,macos,android,jetbrains+all,windows,java
 
 ### Android ###
@@ -380,4 +380,4 @@ obj/
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-# End of https://www.toptal.com/developers/gitignore/api/androidstudio,macos,android,jetbrains+all,windows,java
+# End of https://www.toptal.com/developers/gitignore/rocketApi/androidstudio,macos,android,jetbrains+all,windows,java
