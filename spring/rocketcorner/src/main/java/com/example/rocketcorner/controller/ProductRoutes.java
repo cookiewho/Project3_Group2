@@ -32,9 +32,9 @@ public class ProductRoutes {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> items(@RequestParam Optional<String> ID) {
+    public ResponseEntity<?> items(@RequestParam String ID) {
         try {
-            return new ResponseEntity<>(firebaseService.getProduct(ID.get()), HttpStatus.OK);
+            return new ResponseEntity<>(firebaseService.getProduct(ID), HttpStatus.OK);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -81,9 +81,7 @@ public class ProductRoutes {
                 currProduct.setPrice(price.get());
             }
 
-            HashMap<String, Object> out = new HashMap<>();
-            out.put(ID, currProduct);
-            String myID = firebaseService.updateProductDetails(ID, out);
+            String myID = firebaseService.updateProductDetails(ID, currProduct);
             return new ResponseEntity<>(ID + " Updated", HttpStatus.OK);
 
         } catch (ExecutionException e) {

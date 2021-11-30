@@ -131,21 +131,14 @@ public class FirebaseService {
         return docRef.getId().toString();
     }
 
-    public String updateProductDetails(String productId, HashMap<String, Object> updates) throws InterruptedException, ExecutionException {
-        try {
-            Firestore dbFirestore = FirestoreClient.getFirestore();
-            DocumentReference IDdocRef = dbFirestore.collection("products").document(productId);
+    public String updateProductDetails(String productId, Product product) throws InterruptedException, ExecutionException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("products").document(productId).update("name", product.getName());
+        ApiFuture<WriteResult> collectionsApiFuture2 = dbFirestore.collection("products").document(productId).update("desc", product.getDesc());
+        ApiFuture<WriteResult> collectionsApiFuture3 = dbFirestore.collection("products").document(productId).update("imgLink", product.getImgLink());
+        ApiFuture<WriteResult> collectionsApiFuture4 = dbFirestore.collection("products").document(productId).update("price", product.getPrice());
 
-            DocumentSnapshot docSnap = IDdocRef.get().get();
-            if (docSnap.exists()) {
-                ApiFuture<WriteResult> collectionsApiFuture = IDdocRef.update(updates);
-                return IDdocRef.getId().toString();
-            } else {
-                return null;
-            }
-        } catch (Exception e){
-            throw e;
-        }
+        return productId;
     }
 
     public  String getProductId(String prodName) throws ExecutionException, InterruptedException {
