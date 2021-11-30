@@ -45,7 +45,10 @@ public class ProductRoutes {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<?> addProduct(@RequestParam String name, @RequestParam String description, @RequestParam String imageURL, @RequestParam double price) {
+    public ResponseEntity<?> addProduct(@RequestParam String adminId, @RequestParam String adminPassword, @RequestParam String name, @RequestParam String description, @RequestParam String imageURL, @RequestParam double price) {
+        if (!UserRoutes.isAdmin(adminId, adminPassword)) {
+            return new ResponseEntity<>("Not Admin", HttpStatus.FORBIDDEN);
+        }
         try {
             String ID = firebaseService.saveProductDetails(new Product(name, description, imageURL, price));
             return new ResponseEntity<>(ID, HttpStatus.OK);
@@ -60,7 +63,10 @@ public class ProductRoutes {
 
     //look into maybe using objectmapper for this one
     @PatchMapping("/products")
-    public ResponseEntity<?> updateProduct(@RequestParam String ID, @RequestParam Optional<String> name, @RequestParam Optional<String> description, Optional<String> imageURL, Optional<Double> price) {
+    public ResponseEntity<?> updateProduct(@RequestParam String adminId, @RequestParam String adminPassword, @RequestParam String ID, @RequestParam Optional<String> name, @RequestParam Optional<String> description, Optional<String> imageURL, Optional<Double> price) {
+        if (!UserRoutes.isAdmin(adminId, adminPassword)) {
+            return new ResponseEntity<>("Not Admin", HttpStatus.FORBIDDEN);
+        }
         try {
             HashMap<String, Product> currMap = firebaseService.getProduct(ID);
             Product currProduct = currMap.get(ID);
