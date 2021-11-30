@@ -46,20 +46,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-
-//        button = findViewById(R.id.test);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                loadStore(view);
-//            }
-//        });
+        
     }
 
-    private void loadStore(View view){
-        Intent intent = StoreActivity.getIntent(getApplicationContext());
-        startActivity(intent);
-    }
 
     public static Intent getIntent(Context context){
         Intent intent = new Intent(context, MainActivity.class);
@@ -105,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editTextPassword.requestFocus();
             return;
         }
+
+
         progressBar.setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();
 
@@ -113,7 +104,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if(task.isSuccessful()){
-                    startActivity(new Intent(MainActivity.this, profileActivity.class));
+                    Intent intent = profileActivity.getIntent(getApplicationContext());
+                    startActivity(intent);
                 }else{
                     Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
                 }
