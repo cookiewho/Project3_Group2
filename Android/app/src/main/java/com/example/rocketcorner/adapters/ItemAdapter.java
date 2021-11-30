@@ -24,10 +24,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private String[] localDataSet; // this will be replaced by list of Items
     public List<String> items;
     public List<String> images;
-    public ItemAdapter(Context context, List<String> items, List<String> images){
+    private OnItemListener OnItemListener;
+    public ItemAdapter(Context context, List<String> items, List<String> images, OnItemListener itemListener){
         this.context = context;
         this.items = items;
         this.images = images;
+        this.OnItemListener = itemListener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -36,7 +38,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_row, viewGroup, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, OnItemListener);
     }
 
 
@@ -49,30 +51,27 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         String item = items.get(position);
         String image = images.get(position);
         viewHolder.bind(item, image);
-//        viewHolder.getTextView().setText(items.get(position));
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView itemName;
         ImageView itemImage;
         RelativeLayout container;
+        OnItemListener itemListener;
 
-        public ViewHolder(@NonNull View view) {
+        public ViewHolder(@NonNull View view, OnItemListener itemListener) {
             super(view);
             // Define click listener for the ViewHolder's View
             container = itemView.findViewById(R.id.container);
             itemName = (TextView) view.findViewById(R.id.itemName);
             itemImage = (ImageView) view.findViewById(R.id.itemImage);
+            this.itemListener = itemListener;
+
+            view.setOnClickListener(this);
         }
 
         public void bind(String name, String image){
@@ -84,6 +83,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         public TextView getTextView() {
             return itemName;
         }
+
+        @Override
+        public void onClick(View view) {
+            itemListener.onItemClick(getBindingAdapterPosition());
+        }
     }
 
 
@@ -91,6 +95,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public interface OnItemListener{
+        void onItemClick(int position);
     }
 
 }
