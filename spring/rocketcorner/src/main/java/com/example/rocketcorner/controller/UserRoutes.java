@@ -122,12 +122,8 @@ public class UserRoutes {
     @DeleteMapping("/deleteUser")
     public ResponseEntity<?> deleteUser(@RequestParam String userId, @RequestParam String password, @RequestParam(required = false) String adminId) throws ExecutionException, InterruptedException {
         try {
-            boolean verified = false;
-            if (adminId != null && adminId.equals(Admin.ADMIN_ID)){
-                if(password.equals(Admin.ADMIN_PASSWORD)){
-                    verified = true;
-                }
-            } else {
+            boolean verified = isAdmin(adminId, password);
+            if (!verified){
                 HashMap<String, User> userHash = firebaseService.getUser(userId);
                 if (userHash != null) {
                     for (Map.Entry<String, User> entry : userHash.entrySet()) {
@@ -189,6 +185,15 @@ public class UserRoutes {
             System.out.print(e);
             return "INTERNAL SERVER ERROR";
         }
+    }
+
+    public Boolean isAdmin(String adminId, String password){
+        if (adminId != null && adminId.equals(Admin.ADMIN_ID)){
+            if(password.equals(Admin.ADMIN_PASSWORD)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
