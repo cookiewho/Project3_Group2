@@ -81,14 +81,18 @@ public class ProductRoutes {
                 currProduct.setPrice(price.get());
             }
 
-            HashMap<String, Object> = 
-            String myID = firebaseService.updateProductDetails(ID, currMap);
+            HashMap<String, Object> out = new HashMap<>();
+            out.put(ID, currProduct);
+            String myID = firebaseService.updateProductDetails(ID, out);
+            return new ResponseEntity<>(ID + " Updated", HttpStatus.OK);
 
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
