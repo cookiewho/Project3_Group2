@@ -50,6 +50,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         String image = images.get(position);
         viewHolder.bind(item, image);
 //        viewHolder.getTextView().setText(items.get(position));
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     /**
