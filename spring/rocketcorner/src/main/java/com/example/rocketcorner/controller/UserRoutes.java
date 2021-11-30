@@ -114,7 +114,7 @@ public class UserRoutes {
                 }
             }
 
-            if (verified){
+            if (verified && !userId.equals(Admin.ADMIN_ID)){
                 boolean userDeleted = firebaseService.deleteUser(userId);
                 if (userDeleted) {
                     return new ResponseEntity<>("User " + userId + " Deleted", HttpStatus.OK);
