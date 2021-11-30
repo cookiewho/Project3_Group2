@@ -187,7 +187,7 @@ public class UserRoutes {
         }
     }
 
-    public Boolean isAdmin(String adminId, String password){
+    public static Boolean isAdmin(String adminId, String password){
         if (adminId != null && adminId.equals(Admin.ADMIN_ID)){
             if(password.equals(Admin.ADMIN_PASSWORD)){
                 return true;

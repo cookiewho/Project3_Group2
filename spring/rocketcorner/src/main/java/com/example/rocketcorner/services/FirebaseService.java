@@ -7,10 +7,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -134,6 +131,16 @@ public class FirebaseService {
         return docRef.getId().toString();
     }
 
+    public String updateProductDetails(String productId, Product product) throws InterruptedException, ExecutionException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("products").document(productId).update("name", product.getName());
+        ApiFuture<WriteResult> collectionsApiFuture2 = dbFirestore.collection("products").document(productId).update("desc", product.getDesc());
+        ApiFuture<WriteResult> collectionsApiFuture3 = dbFirestore.collection("products").document(productId).update("imgLink", product.getImgLink());
+        ApiFuture<WriteResult> collectionsApiFuture4 = dbFirestore.collection("products").document(productId).update("price", product.getPrice());
+
+        return productId;
+    }
+
     public  String getProductId(String prodName) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference usersCollection = dbFirestore.collection("products");
@@ -152,6 +159,32 @@ public class FirebaseService {
         return deleteResult.get().getUpdateTime().toString();
     }
 
+    public HashMap<String, Product> getProduct (String prodId) throws ExecutionException, InterruptedException {
+        try{
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            ApiFuture<DocumentSnapshot> result = dbFirestore.collection("products").document(prodId).get();
+
+
+            DocumentSnapshot docSnap = (DocumentSnapshot) result.get();
+            if(docSnap.exists()) {
+                HashMap<String, Product> response = new HashMap<>();
+                try {
+                    String productId = result.get().getId();
+                    Product productObject = result.get().toObject(Product.class);
+                    response.put(productId, productObject);
+                    return response;
+                } catch (Exception e) {
+                    throw e;
+                }
+            }
+
+            return null;
+        } catch (Exception e){
+            throw e;
+        }
+    }
+
+
     public HashMap<String, Product> getAllProducts() throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> queryFuture = dbFirestore.collection("products").get();
@@ -165,4 +198,6 @@ public class FirebaseService {
         }
         return response;
     }
+
+
 }

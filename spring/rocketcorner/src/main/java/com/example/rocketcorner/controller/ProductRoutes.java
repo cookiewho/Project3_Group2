@@ -32,23 +32,71 @@ public class ProductRoutes {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> items(@RequestParam Optional<String> name) {
-        if(name.isPresent()) {
-            return new ResponseEntity<>(new Product("Slowpoke Tail", "Slowpoke Tail for Slowpoke Soup", "https://i.etsystatic.com/7926094/r/il/1cbb75/872549159/il_570xN.872549159_swi4.jpg", 9.99), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(Arrays.asList(new Product("Premium Slowpoke Tail", "Slowpoke Tail for Slowpoke Soup", "https://i.etsystatic.com/7926094/r/il/1cbb75/872549159/il_570xN.872549159_swi4.jpg", 9.99), new Product("Slowpoke Tail", "Slowpoke Tail For Consumption", "https://i.etsystatic.com/7926094/r/il/1cbb75/872549159/il_570xN.872549159_swi4.jpg", 19.99)), HttpStatus.OK);
+    public ResponseEntity<?> items(@RequestParam String ID) {
+        try {
+            return new ResponseEntity<>(firebaseService.getProduct(ID), HttpStatus.OK);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/products")
-    public ResponseEntity<?> addProduct(@RequestParam String name, @RequestParam String description, @RequestParam String imageURL, @RequestParam double price) {
-        return new ResponseEntity<>("Product id # goes here", HttpStatus.OK);
+    public ResponseEntity<?> addProduct(@RequestParam String adminId, @RequestParam String adminPassword, @RequestParam String name, @RequestParam String description, @RequestParam String imageURL, @RequestParam double price) {
+        if (!UserRoutes.isAdmin(adminId, adminPassword)) {
+            return new ResponseEntity<>("Not Admin", HttpStatus.FORBIDDEN);
+        }
+        try {
+            String ID = firebaseService.saveProductDetails(new Product(name, description, imageURL, price));
+            return new ResponseEntity<>(ID, HttpStatus.OK);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     //look into maybe using objectmapper for this one
     @PatchMapping("/products")
-    public ResponseEntity<?> updateProduct(@RequestParam String productId, @RequestParam Optional<String> name, @RequestParam Optional<String> description, Optional<String> imageURL, Optional<Double> price) {
-        return new ResponseEntity<>(productId + " Updated", HttpStatus.OK);
+    public ResponseEntity<?> updateProduct(@RequestParam String adminId, @RequestParam String adminPassword, @RequestParam String ID, @RequestParam Optional<String> name, @RequestParam Optional<String> description, Optional<String> imageURL, Optional<Double> price) {
+        if (!UserRoutes.isAdmin(adminId, adminPassword)) {
+            return new ResponseEntity<>("Not Admin", HttpStatus.FORBIDDEN);
+        }
+        try {
+            HashMap<String, Product> currMap = firebaseService.getProduct(ID);
+            Product currProduct = currMap.get(ID);
+
+            if(name.isPresent()) {
+                currProduct.setName(name.get());
+            }
+
+            if(description.isPresent()) {
+                currProduct.setDesc(description.get());
+            }
+
+            if(imageURL.isPresent()) {
+                currProduct.setImgLink(imageURL.get());
+            }
+
+            if(price.isPresent()) {
+                currProduct.setPrice(price.get());
+            }
+
+            String myID = firebaseService.updateProductDetails(ID, currProduct);
+            return new ResponseEntity<>(ID + " Updated", HttpStatus.OK);
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
