@@ -44,6 +44,15 @@ public class UserRoutes {
         try {
             String userId_updated = firebaseService.updateUserDetails(userId, updates);
             if(userId_updated != null) {
+
+                // VALIDATE USERNAME AND EMAIL NOT DUPLICATED
+                String validated = duplicateCreds(new_username, new_email, userId_updated);
+                if(validated.equals("INTERNAL SERVER ERROR")){
+                    return new ResponseEntity<>(validated, HttpStatus.INTERNAL_SERVER_ERROR);
+                } else if(!validated.equals("valid")){
+                    return new ResponseEntity<>(validated, HttpStatus.FORBIDDEN);
+                }
+
                 return new ResponseEntity<>(userId_updated, HttpStatus.OK);
             }
             return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
@@ -72,28 +81,12 @@ public class UserRoutes {
     @PostMapping("/newUser")
     public ResponseEntity<?> newUser(@RequestParam String username, @RequestParam String email, @RequestParam String password) throws ExecutionException, InterruptedException {
         try{
-            // ENSURE CREDENTIALS ARE VALID
-            String inValidMsg = "";
-            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
-            for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
-                if (entry.getValue().getUsername().equals(username)) {
-                    if(inValidMsg.length() == 0){
-                        inValidMsg += "ERROR: ";
-                    }
-
-                    inValidMsg += "Username is already taken. ";
-                }
-
-                if (entry.getValue().getEmail().equals(email)) {
-                    if(inValidMsg.length() == 0){
-                        inValidMsg += "ERROR: ";
-                    }
-
-                    inValidMsg += "Email is already taken. ";
-                }
-            }
-            if(inValidMsg.length() != 0){
-                return new ResponseEntity<>(inValidMsg, HttpStatus.FORBIDDEN);
+            // VALIDATE USERNAME AND EMAIL NOT DUPLICATED
+            String validated = duplicateCreds(username, email, null);
+            if(validated.equals("INTERNAL SERVER ERROR")){
+                return new ResponseEntity<>(validated, HttpStatus.INTERNAL_SERVER_ERROR);
+            } else if(!validated.equals("valid")){
+                return new ResponseEntity<>(validated, HttpStatus.FORBIDDEN);
             }
 
             // ONCE CREDENTAILS VALIDATED CREATE USER
@@ -162,24 +155,40 @@ public class UserRoutes {
         }
     }
 
-    public boolean validateUsername(String newUsername) throws ExecutionException, InterruptedException {
-        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
-        for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
-            if (entry.getValue().getUsername().equals(newUsername)) {
-                return false;
+    public String duplicateCreds(String username, String email, String id) throws ExecutionException, InterruptedException {
+        try {
+            if(id == null){
+                id = "";
             }
-        }
-        return true;
-    }
+            String inValidMsg = "";
+            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+            for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
+                if(!(id.equals(entry.getKey()))) {
+                    if (entry.getValue().getUsername().equals(username)) {
+                        if (inValidMsg.length() == 0) {
+                            inValidMsg += "ERROR: ";
+                        }
 
-    public boolean validateEmail(String newEmail) throws ExecutionException, InterruptedException {
-        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
-        for (Map.Entry<String, User> entry : allUsersHash.entrySet()) {
-            if (entry.getValue().getEmail().equals(newEmail)) {
-                return false;
+                        inValidMsg += "Username is already taken. ";
+                    }
+
+                    if (entry.getValue().getEmail().equals(email)) {
+                        if (inValidMsg.length() == 0) {
+                            inValidMsg += "ERROR: ";
+                        }
+
+                        inValidMsg += "Email is already taken. ";
+                    }
+                }
             }
+            if(inValidMsg.length() != 0){
+                return inValidMsg;
+            }
+            return "valid";
+        } catch (Exception e){
+            System.out.print(e);
+            return "INTERNAL SERVER ERROR";
         }
-        return true;
     }
 
 
