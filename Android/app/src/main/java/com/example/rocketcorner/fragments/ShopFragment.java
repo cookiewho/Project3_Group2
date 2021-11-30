@@ -73,7 +73,7 @@ public class ShopFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
         RecyclerView rv = view.findViewById(R.id.rvItems);
-        
+
         List<String>  items = new ArrayList<>();
         List<String> images = new ArrayList<>();
         final ItemAdapter adapter = new ItemAdapter(view.getContext(), items, images);

@@ -94,23 +94,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        Intent intent = profileActivity.getIntent(getApplicationContext());
-        startActivity(intent);
-//        progressBar.setVisibility(View.VISIBLE);
-//        mAuth = FirebaseAuth.getInstance();
-//
-//        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//
-//                if(task.isSuccessful()){
-//                    Intent intent = profileActivity.getIntent(getApplicationContext());
-//                    startActivity(intent);
-//                }else{
-//                    Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
+
+        progressBar.setVisibility(View.VISIBLE);
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if(task.isSuccessful()){
+                    Intent intent = profileActivity.getIntent(getApplicationContext());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
     }
 
