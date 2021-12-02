@@ -3,16 +3,15 @@ package com.example.rocketcorner.controller;
 import com.example.rocketcorner.objects.Admin;
 import com.example.rocketcorner.objects.User;
 import com.example.rocketcorner.services.FirebaseService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -153,13 +152,20 @@ public class UserRoutes {
     }
 
     @PatchMapping("/updateCart")
-    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException {
+    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
         try {
+            cartUpdatesMapStr = "{"+ cartUpdatesMapStr + "}";
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, Integer> cartUpdatesMap = mapper.readValue(cartUpdatesMapStr, Map.class);
+            Map<String, Integer> cartUpdatesMap;
 
+            // Make sure cart format is correct
+            try {
+                cartUpdatesMap = mapper.readValue(cartUpdatesMapStr, Map.class);
+            } catch (JsonParseException e){
+                return new ResponseEntity<>("Invalid Cart Formatting", HttpStatus.FORBIDDEN);
+            }
 
-
+            // call db to update cart
             Map<String, Integer> updatedCart = firebaseService.updateCart(userId, cartUpdatesMap);
             if(updatedCart != null) {
                 return new ResponseEntity<>(updatedCart, HttpStatus.OK);
