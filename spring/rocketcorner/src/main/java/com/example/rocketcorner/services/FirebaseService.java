@@ -199,5 +199,25 @@ public class FirebaseService {
         return response;
     }
 
+    // CART SERVICES
+    public Map<String, Integer> updateCart(String userId, Map<String, Integer> cartUpdates) throws ExecutionException, InterruptedException {
+        try {
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            DocumentReference IDdocRef = dbFirestore.collection("users").document(userId);
+
+            DocumentSnapshot docSnap = IDdocRef.get().get();
+            if (docSnap.exists()) {
+                ApiFuture<WriteResult> writeResultAF = IDdocRef.update("cart", cartUpdates);
+                ApiFuture<DocumentSnapshot> result = dbFirestore.collection("users").document(userId).get();
+                User userObject = result.get().toObject(User.class);
+
+                return userObject.getCart();
+            } else {
+                return null;
+            }
+        } catch (Exception e){
+            throw e;
+        }
+    }
 
 }
