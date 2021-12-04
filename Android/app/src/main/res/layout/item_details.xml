@@ -14,7 +14,53 @@
         android:elevation="4dp"
         app:navigationIcon="?attr/homeAsUpIndicator"/>
 
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="75dp"
+        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"/>
 
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/item_name"
+        android:layout_marginTop="15dp"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"/>
 
+    <TextView
+        android:id="@+id/item_description"
+        android:layout_width="35mm"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_image"
+        android:layout_marginTop="50dp"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"/>
 
+    <TextView
+        android:id="@+id/item_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:layout_below="@id/item_description"
+        android:layout_marginTop="50dp"
+        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"/>
+
+    <Button
+        android:id="@+id/buy_button"
+        android:layout_width="40mm"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_price"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"
+        android:textAlignment="center"
+        android:background="#FAF0D3"
+        android:shadowColor="@color/black"
+        android:text="Add To Cart"/>
 </RelativeLayout>

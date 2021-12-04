@@ -24,6 +24,7 @@ import com.example.rocketcorner.rocketAPI;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -151,13 +152,14 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
 
     @Override
     public void onItemClick(int position) {
-        // TODO replace to be product class
-        List<String> result = new ArrayList<>();
-//        result.add(items.get(position));
-//        result.add(images.get(position));
+        String k = product_list.get(position).getKey();
+        Product p = product_list.get(position).getValue();
 
         Intent intent = new Intent(getActivity(), ItemDetailsActivity.class);
-//        intent.putExtra("product", "RESULT");
+        Bundle args = new Bundle();
+        args.putString("KEY", k);
+        args.putSerializable("VALUE", (Serializable) p);
+        intent.putExtra("BUNDLE",args);
         startActivity(intent);
     }
 }
