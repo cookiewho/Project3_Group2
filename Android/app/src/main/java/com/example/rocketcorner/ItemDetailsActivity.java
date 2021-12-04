@@ -56,6 +56,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO get user and add to their cart via /updateCart
                 Toast.makeText(getApplicationContext(), "Item Added!", Toast.LENGTH_SHORT).show();
             }
         });

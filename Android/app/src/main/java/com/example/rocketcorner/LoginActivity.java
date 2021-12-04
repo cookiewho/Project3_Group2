@@ -32,9 +32,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // testing
-        Intent intent = MainActivity.getIntent(getApplicationContext());
-        startActivity(intent);
 
         setContentView(R.layout.activity_main);
 
