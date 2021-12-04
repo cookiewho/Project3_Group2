@@ -1,6 +1,8 @@
 package com.example.rocketcorner.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -8,17 +10,30 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rocketcorner.ItemDetailsActivity;
+import com.example.rocketcorner.Product;
 import com.example.rocketcorner.R;
 import com.example.rocketcorner.adapters.ItemAdapter;
+import com.example.rocketcorner.rocketAPI;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,9 +47,12 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private List<String> items;
-    private List<String> images;
     private RecyclerView rv;
+    public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
+    HashMap<String, Product> products = new HashMap<>();
+    ArrayList<Map.Entry<String, Product>> product_list = new ArrayList<>();
+    public static final String SHARED_PREFS = "sharedPrefs";
+    Gson gson = new Gson();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -75,32 +93,68 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
-        rv = view.findViewById(R.id.rvItems);
 
-        // TODO items & images may change when pulling from api
-        items = new ArrayList<>();
-        images = new ArrayList<>();
-        final ItemAdapter adapter = new ItemAdapter(view.getContext(), items, images, this);
+        SharedPreferences pref = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        String prod_map = pref.getString("all_products", "");
+        if (prod_map == null){
+            // Will need to change when items are updated on API side
+            prod_map = getAllProducts(pref);
+        }
+
+        java.lang.reflect.Type type = new TypeToken<HashMap<String, Product>>(){}.getType();
+        products = gson.fromJson(prod_map, type);
+        for (Map.Entry<String, Product> e: products.entrySet()){
+            product_list.add(e);
+        }
+
+        rv = view.findViewById(R.id.rvItems);
+        final ItemAdapter adapter = new ItemAdapter(view.getContext(), product_list, this);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
-        items.add("Slowpoke Tail");
-        items.add("Pikachu");
-        items.add("Dragonair");
-        images.add("https://i.imgur.com/tySRzD6.jpg");
-        images.add("https://i.imgur.com/Zq0iBJK.jpg");
-        images.add("https://i.imgur.com/GrwUHJO.png");
         adapter.notifyDataSetChanged();
 
         return view;
+    }
+
+    public String getAllProducts(SharedPreferences pref){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        rocketAPI rocketApi = retrofit.create(rocketAPI.class);
+        Call<Map<String, Product>> call = rocketApi.getProdData();
+        SharedPreferences.Editor editor = pref.edit();
+
+        call.enqueue(new Callback<Map<String, Product>>() {
+            @Override
+            public void onResponse(Call<Map<String, Product>> call, Response<Map<String, Product>> response) {
+                if (!response.isSuccessful()) {
+                    Log.d("== Response ==", "Response is outside of the 200-300 range!");
+                    return;
+                }
+
+                Map<String, Product> m = response.body();
+                String prod_map = gson.toJson(m);
+                editor.putString("all_products", prod_map);
+                editor.apply();
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Product>> call, Throwable t) {
+                Log.d("== ERROR ==", t.getMessage());
+            }
+        });
+
+        return pref.getString("all_products", "");
     }
 
     @Override
     public void onItemClick(int position) {
         // TODO replace to be product class
         List<String> result = new ArrayList<>();
-        result.add(items.get(position));
-        result.add(images.get(position));
+//        result.add(items.get(position));
+//        result.add(images.get(position));
 
         Intent intent = new Intent(getActivity(), ItemDetailsActivity.class);
 //        intent.putExtra("product", "RESULT");

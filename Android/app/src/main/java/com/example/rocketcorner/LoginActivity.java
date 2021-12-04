@@ -28,7 +28,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private Button button;
-    public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

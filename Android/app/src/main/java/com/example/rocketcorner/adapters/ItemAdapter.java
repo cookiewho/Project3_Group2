@@ -13,22 +13,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.rocketcorner.Product;
 import com.example.rocketcorner.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     Context context;
     // TODO Create list of Items class & add to constructor
 
     private String[] localDataSet; // this will be replaced by list of Items
-    public List<String> items;
-    public List<String> images;
+
+    public ArrayList<Map.Entry<String, Product>> products;
     private OnItemListener OnItemListener;
-    public ItemAdapter(Context context, List<String> items, List<String> images, OnItemListener itemListener){
+    public ItemAdapter(Context context, ArrayList<Map.Entry<String, Product>> products, OnItemListener itemListener){
         this.context = context;
-        this.items = items;
-        this.images = images;
+        this.products = products;
         this.OnItemListener = itemListener;
     }
 
@@ -48,9 +51,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        String item = items.get(position);
-        String image = images.get(position);
-        viewHolder.bind(item, image);
+        Map.Entry<String, Product> entry = products.get(position);
+        Product p = entry.getValue();
+        String item = p.getName();
+        String image = p.getImgLink();
+        double price = p.getPrice();
+
+        if(item != null && image != null) {
+            viewHolder.bind(item, image, price);
+        }
     }
 
     /**
@@ -59,6 +68,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView itemName;
+        TextView itemPrice;
         ImageView itemImage;
         RelativeLayout container;
         OnItemListener itemListener;
@@ -69,14 +79,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             container = itemView.findViewById(R.id.container);
             itemName = (TextView) view.findViewById(R.id.itemName);
             itemImage = (ImageView) view.findViewById(R.id.itemImage);
+            itemPrice = (TextView) view.findViewById(R.id.itemPrice);
             this.itemListener = itemListener;
 
             view.setOnClickListener(this);
         }
 
-        public void bind(String name, String image){
+        public void bind(String name, String image, double price){
             itemName.setText(name);
-            Log.d("=== GLIDE", image);
+            itemPrice.setText(Double.toString(price));
             Glide.with(context).load(image).into(itemImage);
         }
 
@@ -94,7 +105,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return items.size();
+        return products.size();
     }
 
     public interface OnItemListener{
