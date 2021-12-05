@@ -33,6 +33,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = MainActivity.getIntent(getApplicationContext());
+        startActivity(intent);
+
         setContentView(R.layout.activity_main);
 
         register = (TextView) findViewById(R.id.register);

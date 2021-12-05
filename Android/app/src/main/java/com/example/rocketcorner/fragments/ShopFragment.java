@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.AsyncTaskLoader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,8 +53,6 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
     HashMap<String, Product> products = new HashMap<>();
     ArrayList<Map.Entry<String, Product>> product_list = new ArrayList<>();
-    public static final String SHARED_PREFS = "sharedPrefs";
-    Gson gson = new Gson();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -95,29 +94,6 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
-        SharedPreferences pref = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        String prod_map = pref.getString("all_products", "");
-        if (prod_map == null){
-            // Will need to change when items are updated on API side
-            prod_map = getAllProducts(pref);
-        }
-
-        java.lang.reflect.Type type = new TypeToken<HashMap<String, Product>>(){}.getType();
-        products = gson.fromJson(prod_map, type);
-        for (Map.Entry<String, Product> e: products.entrySet()){
-            product_list.add(e);
-        }
-
-        rv = view.findViewById(R.id.rvItems);
-        final ItemAdapter adapter = new ItemAdapter(view.getContext(), product_list, this);
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        adapter.notifyDataSetChanged();
-
-        return view;
-    }
-
-    public String getAllProducts(SharedPreferences pref){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -125,7 +101,7 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
 
         rocketAPI rocketApi = retrofit.create(rocketAPI.class);
         Call<Map<String, Product>> call = rocketApi.getProdData();
-        SharedPreferences.Editor editor = pref.edit();
+        ShopFragment sh = this;
 
         call.enqueue(new Callback<Map<String, Product>>() {
             @Override
@@ -135,10 +111,18 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
                     return;
                 }
 
+
                 Map<String, Product> m = response.body();
-                String prod_map = gson.toJson(m);
-                editor.putString("all_products", prod_map);
-                editor.apply();
+                for (Map.Entry<String, Product> e: m.entrySet()){
+                    product_list.add(e);
+                }
+
+                rv = view.findViewById(R.id.rvItems);
+                final ItemAdapter adapter = new ItemAdapter(view.getContext(), product_list, sh);
+                rv.setAdapter(adapter);
+                rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -147,7 +131,7 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
             }
         });
 
-        return pref.getString("all_products", "");
+        return view;
     }
 
     @Override
