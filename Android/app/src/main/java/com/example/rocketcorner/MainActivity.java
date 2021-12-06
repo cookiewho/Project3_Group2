@@ -20,12 +20,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView register;
-    private EditText editTextEmail, editTextPassword;
+    private EditText editTextUsername, editTextPassword;
     private Button signIn;
 
-    private FirebaseAuth mAuth;
+    private boolean mAuth;
     private ProgressBar progressBar;
     private Button button;
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
@@ -41,10 +51,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signIn = (Button) findViewById(R.id.signIn);
         signIn.setOnClickListener(this);
 
-        editTextEmail = (EditText) findViewById(R.id.email);
+        editTextUsername = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.password);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         
     }
@@ -63,26 +74,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.signIn:
-                userLogin();
+                try {
+                    userLogin();
+                } catch (IOException ioe){
+                    Toast.makeText(MainActivity.this, "Error processing login credentials", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }
 
 
-    private void userLogin(){
-        String email = editTextEmail.getText().toString().trim();
+    private void userLogin() throws IOException {
+        String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        if(email.isEmpty()){
-            editTextEmail.setError("Email is required");
-            editTextEmail.requestFocus();
+        if(username.isEmpty()){
+            editTextUsername.setError("Email is required");
+            editTextUsername.requestFocus();
             return;
-        }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            editTextEmail.setError("Please enter a valid email");
-            editTextEmail.requestFocus();
-            return;
-
         }
         if(password.isEmpty()){
             editTextPassword.setError("Password is required");
@@ -97,20 +106,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         progressBar.setVisibility(View.VISIBLE);
-        mAuth = FirebaseAuth.getInstance();
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        Call<Boolean> callAsync = rocketApi.createService().loginUser(username, password);
+        callAsync.enqueue(new Callback<Boolean>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful())
+                {
+                    Boolean apiResponse = response.body();
+                    mAuth = apiResponse;
+                    System.out.println("Respnse: " + apiResponse);
 
-                if(task.isSuccessful()){
-                    Intent intent = profileActivity.getIntent(getApplicationContext());
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                    if(mAuth){
+                        Intent intent = profileActivity.getIntent(getApplicationContext());
+                        startActivity(intent);
+                    } else{
+                        Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
+                    }
+                }
+                else
+                {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    System.out.println("Request Error :: " + response.errorBody());
+                    Toast.makeText(MainActivity.this, "Request Error, try again", Toast.LENGTH_LONG).show();
                 }
             }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                System.out.println("Network Error :: " + t.getLocalizedMessage());
+                Toast.makeText(MainActivity.this, "Request Error, try again", Toast.LENGTH_LONG).show();
+            }
         });
+        System.out.println("WORK? "+mAuth);
+
+
+
+
 
     }
 
