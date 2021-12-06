@@ -4,6 +4,7 @@ package com.example.rocketcorner;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,20 +33,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        register = (TextView) findViewById(R.id.register);
-        register.setOnClickListener(this);
-
-        signIn = (Button) findViewById(R.id.signIn);
-        signIn.setOnClickListener(this);
 
         editTextUsername = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.password);
-
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
-
         
     }
 
@@ -83,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             editTextUsername.requestFocus();
             return;
         }
+
         if(password.isEmpty()){
             editTextPassword.setError("Password is required");
             editTextPassword.requestFocus();
@@ -126,9 +119,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(LoginActivity.this, "Request Error, try again", Toast.LENGTH_LONG).show();
             }
         });
-
-
-
     }
 
 }
