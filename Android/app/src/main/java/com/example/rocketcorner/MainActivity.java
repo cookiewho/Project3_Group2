@@ -85,11 +85,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void userLogin() throws IOException {
+        progressBar.setVisibility(View.VISIBLE);
         String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
         if(username.isEmpty()){
-            editTextUsername.setError("Email is required");
+            editTextUsername.setError("Username is required");
             editTextUsername.requestFocus();
             return;
         }
@@ -105,45 +106,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        progressBar.setVisibility(View.VISIBLE);
-
-        Call<Boolean> callAsync = rocketApi.createService().loginUser(username, password);
-        callAsync.enqueue(new Callback<Boolean>() {
+        Call<String> callAsync = rocketApi.createService().loginUser(username, password);
+        callAsync.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if (response.isSuccessful())
+            public void onResponse(Call<String> call, Response<String> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.code() == 200)
                 {
-                    Boolean apiResponse = response.body();
-                    mAuth = apiResponse;
+                    String apiResponse = response.body();
                     System.out.println("Respnse: " + apiResponse);
 
-                    progressBar.setVisibility(View.INVISIBLE);
+                    //add userId to persistence here
 
-                    if(mAuth){
-                        Intent intent = profileActivity.getIntent(getApplicationContext());
-                        startActivity(intent);
-                    } else{
-                        Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
-                    }
+                    Intent intent = profileActivity.getIntent(getApplicationContext());
+                    startActivity(intent);
+                } else if (response.code() == 403){
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
                 }
-                else
-                {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    System.out.println("Request Error :: " + response.errorBody());
-                    Toast.makeText(MainActivity.this, "Request Error, try again", Toast.LENGTH_LONG).show();
+                else if (response.code() == 500){
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(MainActivity.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 progressBar.setVisibility(View.INVISIBLE);
                 System.out.println("Network Error :: " + t.getLocalizedMessage());
                 Toast.makeText(MainActivity.this, "Request Error, try again", Toast.LENGTH_LONG).show();
             }
         });
-        System.out.println("WORK? "+mAuth);
-
-
 
 
 
