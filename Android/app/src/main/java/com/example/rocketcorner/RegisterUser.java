@@ -12,14 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterUser extends AppCompatActivity implements  View.OnClickListener{
 
@@ -61,6 +60,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
     }
 
     private void registerUser() {
+        progressBar.setVisibility(View.VISIBLE);
         String email = editTextEmail.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -92,41 +92,38 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
             return;
         }
 
+        Call<String> callAsync = rocketApi.createService().registerUser(fullName, email, password);
+        callAsync.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                progressBar.setVisibility(View.GONE);
+                System.out.println(response.toString());
+                if (response.code() == 200)
+                {
+                    String apiResponse = response.body();
+                    System.out.println("user created: " + apiResponse);
 
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth = FirebaseAuth.getInstance();
-        mAuth.createUserWithEmailAndPassword("test@gmail.com", "123456");
+                    //add userId to persistence here
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    Toast.makeText(RegisterUser.this, "User has been registered", Toast.LENGTH_LONG).show();
+                }
+                else if(response.code() == 403) {
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(RegisterUser.this,"Failed to register! Try again!", Toast.LENGTH_LONG).show();
+                }
+                    else if (response.code() == 500){
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(RegisterUser.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                }
+            }
 
-                        if(task.isSuccessful()){
-                            User user = new User(fullName, email);
-
-                            FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(RegisterUser.this, "User has been registered", Toast.LENGTH_LONG).show();
-                                        progressBar.setVisibility(View.VISIBLE);
-                                    }else{
-                                        Toast.makeText(RegisterUser.this,"Failed to register! Try again!", Toast.LENGTH_LONG).show();
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
-
-
-                        }else{
-                            Toast.makeText(RegisterUser.this,"Failed to register! Try again!", Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-
-                        }
-                    }
-                });
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                System.out.println("Network 2 :: " + t);
+                System.out.println("Network Error :: " + t.getLocalizedMessage());
+                Toast.makeText(RegisterUser.this, "Request Error, try again", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

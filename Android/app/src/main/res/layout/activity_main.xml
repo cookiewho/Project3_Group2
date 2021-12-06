@@ -1,136 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/rocketc"
-    tools:context=".LoginActivity"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_nav" />
 
-    <TextView
-        android:id="@+id/banner"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:fontFamily="@font/gotham"
-        android:text="Rocket Corner"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="#ffffff"
-
-        android:textSize="60sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/bannerDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Buy Pokemon Items!"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@+id/banner"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-         />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:ems="10"
-        android:hint="Email Address"
-        android:textColorHint="#ffff"
-        android:textSize="24sp"
-        android:drawableEnd="@drawable/ic_email"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bannerDescription"
-        />
-    <!--        android:inputType="textEmailAdress"-->
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:ems="10"
-        android:hint="Password"
-        android:drawableEnd="@drawable/ic_lock"
-
-        android:textColorHint="#ffff"
-        android:textSize="24sp"
-
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email"
-        />
-    <!--        android:inputType="textPassword"-->
-
-    <Button
-        android:id="@+id/signIn"
-        android:layout_width="380dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="52dp"
-        android:background="@drawable/bg_button_white"
-        android:backgroundTint="#0ED6B9"
-        android:text="Login"
-        android:textColor="#ffff"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
-
-    <TextView
-        android:id="@+id/forgotPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Forgot Password?"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="#ffff"
-        app:layout_constraintTop_toBottomOf="@+id/signIn"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="50dp"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/nav_menu"
+        android:background="?android:attr/windowBackground"
         />
 
-    <TextView
-        android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="#ffff"
-        app:layout_constraintLeft_toRightOf="@+id/forgotPassword"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/forgotPassword"
-        tools:layout_editor_absoluteX="228dp"
-        tools:ignore="MissingConstraints" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="164dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.485"
-        tools:ignore="MissingConstraints" />
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+</RelativeLayout>

@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import android.util.Log;
-import android.util.Patterns;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,16 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
-
 import java.util.Map;
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,15 +26,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView register;
-    private EditText editTextEmail, editTextPassword;
+    private EditText editTextUsername, editTextPassword;
     private Button signIn;
 
-    private FirebaseAuth mAuth;
+    private boolean mAuth;
     private ProgressBar progressBar;
     private Button button;
-
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
 
 
@@ -63,12 +58,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signIn = (Button) findViewById(R.id.signIn);
         signIn.setOnClickListener(this);
 
-        editTextEmail = (EditText) findViewById(R.id.email);
+        editTextUsername = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.password);
-
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
@@ -85,27 +78,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.signIn:
-                userLogin();
+                try {
+                    userLogin();
+                } catch (IOException ioe){
+                    Toast.makeText(LoginActivity.this, "Error processing login credentials", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }
 
 
-    private void userLogin(){
-        String email = editTextEmail.getText().toString().trim();
+    private void userLogin() throws IOException {
+        progressBar.setVisibility(View.VISIBLE);
+        String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        if(email.isEmpty()){
-            editTextEmail.setError("Email is required");
-            editTextEmail.requestFocus();
+        if(username.isEmpty()){
+            editTextUsername.setError("Username is required");
+            editTextUsername.requestFocus();
             return;
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            editTextEmail.setError("Please enter a valid email");
-            editTextEmail.requestFocus();
-            return;
 
-        }
         if(password.isEmpty()){
             editTextPassword.setError("Password is required");
             editTextPassword.requestFocus();
@@ -118,62 +111,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        Call<String> callAsync = rocketApi.createService().loginUser(username, password);
+        callAsync.enqueue(new Callback<String>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            public void onResponse(Call<String> call, Response<String> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.code() == 200)
+                {
+                    String apiResponse = response.body();
+                    System.out.println("Respnse: " + apiResponse);
 
-                if(task.isSuccessful()){
+                    //add userId to persistence here
 
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(BASE_URL)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
-
-                    rocketAPI rocketApi = retrofit.create(rocketAPI.class);
-                    Call<Map<String, User>> call = rocketApi.getUserData();
-                    SharedPreferences pref = getApplicationContext().getSharedPreferences("accountDetails", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
-                    Gson gson = new Gson();
-
-                    call.enqueue(new Callback<Map<String, User>>() {
-                        @Override
-                        public void onResponse(Call<Map<String, User>> call, Response<Map<String, User>> response) {
-                            if (!response.isSuccessful()) {
-                                Log.d("== Response ==", "Response is outside of the 200-300 range!");
-                                return;
-                            }
-
-                            Map<String, User> m = response.body();
-                            for(Map.Entry<String, User> e : m.entrySet()){
-                                if (e.getValue().getEmail().equals(email) && e.getValue().getPassword().equals(password)){
-                                    Map<String, User> user = (Map<String, User>) e;
-                                    String user_string = user.toString();
-                                    editor.putString("user", user_string);
-                                    editor.apply();
-                                    break;
-                                }
-                            }
-
-                            Intent intent = MainActivity.getIntent(getApplicationContext());
-                            startActivity(intent);
-                        }
-
-                        @Override
-                        public void onFailure(Call<Map<String, User>> call, Throwable t) {
-                            Log.d("== ERROR ==", t.getMessage());
-                        }
-                    });
-
-                }else{
-                    Toast.makeText(LoginActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
+                    Intent intent = MainActivity.getIntent(getApplicationContext());
+                    startActivity(intent);
+                } else if (response.code() == 403){
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
+                }
+                else if (response.code() == 500){
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(LoginActivity.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
                 }
 
             }
-        });
 
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                System.out.println("Network Error :: " + t.getLocalizedMessage());
+                Toast.makeText(LoginActivity.this, "Request Error, try again", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }
