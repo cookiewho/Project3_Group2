@@ -1,8 +1,7 @@
 package com.example.rocketcorner.fragments;
 
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -21,7 +20,8 @@ import com.example.rocketcorner.ItemDetailsActivity;
 import com.example.rocketcorner.Product;
 import com.example.rocketcorner.R;
 import com.example.rocketcorner.adapters.ItemAdapter;
-import com.example.rocketcorner.rocketAPI;
+
+import com.example.rocketcorner.rocketInterface;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -99,7 +99,7 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        rocketAPI rocketApi = retrofit.create(rocketAPI.class);
+        rocketInterface rocketApi = retrofit.create(rocketInterface.class);
         Call<Map<String, Product>> call = rocketApi.getProdData();
         ShopFragment sh = this;
 
