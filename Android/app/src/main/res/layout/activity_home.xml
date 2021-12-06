@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/home_background"
     android:orientation="vertical"
-    tools:context=".User.UserDashboard">
+    tools:context=".HomeActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -336,10 +336,7 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/shop_icon" />
+
 
         </LinearLayout>
 
