@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button signIn;
 
     private FirebaseAuth mAuth;
-//    private ProgressBar progressBar;
-    private Button button;
+    private ProgressBar progressBar;
+    //private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                loadStore(view);
 //            }
 //        });
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void loadStore(View view){
@@ -105,14 +106,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 //        progressBar.setVisibility(View.VISIBLE);
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if(task.isSuccessful()){
-                    startActivity(new Intent(MainActivity.this, profileActivity.class));
+                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
+
                 }else{
                     Toast.makeText(MainActivity.this, "Failed to login", Toast.LENGTH_LONG).show();
                 }

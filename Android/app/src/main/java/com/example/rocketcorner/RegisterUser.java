@@ -25,7 +25,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
 
     private TextView banner, registerUser;
     private EditText editTextFullName, editTextEmail, editTextPassword;
-//    private ProgressBar progressBar;
+  private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
     @Override
@@ -95,7 +95,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
 
 //        progressBar.setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();
-        mAuth.createUserWithEmailAndPassword("test@gmail.com", "123456");
+        //mAuth.createUserWithEmailAndPassword("test@gmail.com", "123456");
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
