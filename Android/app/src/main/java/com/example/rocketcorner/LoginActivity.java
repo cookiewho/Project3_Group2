@@ -1,13 +1,11 @@
 package com.example.rocketcorner;
 
-//import android.content.Intent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.util.Log;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,14 +15,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Map;
 import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
+
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,25 +29,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText editTextUsername, editTextPassword;
     private Button signIn;
 
-    private boolean mAuth;
     private ProgressBar progressBar;
-    private Button button;
-    public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("accountDetails", Context.MODE_PRIVATE);
-        String user = pref.getString("user", null);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        String user_id = pref.getString("user_id", null);
 
-        if(user != null) {
+        if(user_id != null) {
             Intent intent = MainActivity.getIntent(getApplicationContext());
             startActivity(intent);
         }
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
@@ -119,9 +112,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.code() == 200)
                 {
                     String apiResponse = response.body();
-                    System.out.println("Respnse: " + apiResponse);
 
-                    //add userId to persistence here
+                    SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("user_id", apiResponse);
+                    editor.apply();
 
                     Intent intent = MainActivity.getIntent(getApplicationContext());
                     startActivity(intent);
