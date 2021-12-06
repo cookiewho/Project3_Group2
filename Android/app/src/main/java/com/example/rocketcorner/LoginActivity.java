@@ -33,12 +33,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        register = (TextView) findViewById(R.id.register);
+        register.setOnClickListener(this);
+
+        signIn = (Button) findViewById(R.id.signIn);
+        signIn.setOnClickListener(this);
 
         editTextUsername = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
-        
     }
 
 
