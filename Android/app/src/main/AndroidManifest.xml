@@ -12,13 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RocketCorner">
         <activity
-            android:name=".profileActivity"
+            android:name=".MainActivity"
             android:exported="true" />
         <activity
             android:name=".RegisterUser"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
