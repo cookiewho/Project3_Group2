@@ -104,7 +104,7 @@ public class HomeActivity extends AppCompatActivity {
         featuredItems.add(new FeaturedHelperClass(R.drawable.search_icon, "Edenrobe", "asbkd asudhlasn saudnas jasdjasl hisajdl asjdlnas"));
         featuredItems.add(new FeaturedHelperClass(R.drawable.search_icon, "Walmart", "asbkd asudhlasn saudnas jasdjasl hisajdl asjdlnas"));
 
-        adapter = new FeaturedAdapter(featuredLocations);
+        adapter = new FeaturedAdapter(featuredItems);
         featuredRecycler.setAdapter(adapter);
 
 
