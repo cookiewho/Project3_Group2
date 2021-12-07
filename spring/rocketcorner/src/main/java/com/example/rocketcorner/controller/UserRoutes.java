@@ -152,8 +152,14 @@ public class UserRoutes {
     }
 
     @PatchMapping("/updateCart")
-    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String password, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
         try {
+            User currUser = firebaseService.getUser(userId).get(userId);
+
+            if(!currUser.getPassword().equals(password)) {
+                return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
+            }
+
             cartUpdatesMapStr = "{"+ cartUpdatesMapStr + "}";
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Integer> cartUpdatesMap;
