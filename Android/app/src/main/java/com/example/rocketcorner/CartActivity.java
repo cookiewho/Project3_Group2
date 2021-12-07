@@ -107,32 +107,6 @@ public class CartActivity extends AppCompatActivity {
                     }
                 });
 
-//                for(Map.Entry<String, Integer> e:u.getCart().entrySet()){
-//                    balance += allProd.get(e.getKey()).getPrice() * e.getValue();
-//                }
-
-
-//                AlertDialog.Builder alert = new AlertDialog.Builder(CartActivity.this);
-//                if(u.getBalance() < balance){
-//                    alert.setTitle("Insufficient Funds.");
-//                    alert.setMessage("The total balance for these items is $" + Double.toString(balance)
-//                                    + ". You currently have: " + Double.toString(u.getBalance()));
-//                    alert.setNegativeButton(android.R.string.ok, null);
-//                } else {
-//                    alert.setTitle("Confirm Purchase");
-//                    alert.setMessage("Are you sure you'd like to make this purchase?\n" +
-//                            "Current Balance: $" + Double.toString(u.getBalance()) + "\n" +
-//                            "Total Cost: $" + Double.toString(balance));
-//                    alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                        }
-//                    });
-//                    alert.setNegativeButton(android.R.string.no, null);
-//                }
-
-
             }
         });
     }
