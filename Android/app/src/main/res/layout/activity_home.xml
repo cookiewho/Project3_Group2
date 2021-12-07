@@ -71,7 +71,7 @@
                         android:layout_marginLeft="15dp"
                         android:text="Search for Items" />
 
-                    <ImageView
+                    <ImageButton
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_alignParentRight="true"
@@ -101,11 +101,12 @@
                         android:background="@drawable/card_1"
                         android:elevation="8dp">
 
-                        <ImageView
+                        <Button
+                            android:id="@+id/profile"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/skip_icon" />
+                            android:background="@drawable/skip_icon" />
 
                     </RelativeLayout>
 
@@ -130,11 +131,12 @@
                         android:background="@drawable/card_2"
                         android:elevation="8dp">
 
-                        <ImageView
+                        <Button
+                            android:id="@+id/shop"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/shop_icon" />
+                            android:background="@drawable/shop_icon" />
 
                     </RelativeLayout>
 

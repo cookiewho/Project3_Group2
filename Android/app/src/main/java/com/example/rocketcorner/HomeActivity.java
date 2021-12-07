@@ -5,12 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.rocketcorner.adapters.ItemAdapter;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,17 +28,26 @@ import com.example.rocketcorner.HomeAdapters.MostViewedAdpater;
 import com.example.rocketcorner.HomeAdaptersHelperClasses.CategoriesHelperClass;
 import com.example.rocketcorner.HomeAdaptersHelperClasses.FeaturedHelperClass;
 import com.example.rocketcorner.HomeAdaptersHelperClasses.MostViewedHelperClass;
+import com.example.rocketcorner.fragments.ShopFragment;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     RecyclerView featuredRecycler, mostViewedRecycler, categoriesRecycler;
     RecyclerView.Adapter adapter;
     private GradientDrawable gradient1, gradient2, gradient3, gradient4;
+    private Button shop;
+    private Button profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        shop = (Button) findViewById(R.id.shop);
+        shop.setOnClickListener( this);
+
+        profile = (Button) findViewById(R.id.profile);
+        profile.setOnClickListener(this);
+
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
@@ -47,6 +63,8 @@ public class HomeActivity extends AppCompatActivity {
         categoriesRecycler();
 
     }
+
+
     public static Intent getIntent(Context context){
         Intent intent = new Intent(context, HomeActivity.class);
         return intent;
@@ -108,5 +126,18 @@ public class HomeActivity extends AppCompatActivity {
         featuredRecycler.setAdapter(adapter);
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.shop:
+                startActivity(new Intent(this, ShopFragment.class));
+                break;
+
+            case R.id.profile:
+                startActivity(new Intent(this, ProfileActivity.class));
+                break;
+        }
     }
 }
