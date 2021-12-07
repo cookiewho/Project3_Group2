@@ -51,6 +51,7 @@ public class AccountFragment extends Fragment {
 
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
     Button cart;
+    String user_id;
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -90,7 +91,7 @@ public class AccountFragment extends Fragment {
 
 
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        String user_id = pref.getString("user_id", null);
+        user_id = pref.getString("user_id", null);
 
         if(user_id == null) {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -117,8 +118,8 @@ public class AccountFragment extends Fragment {
                         public void onClick(View view) {
                             Intent intent = new Intent(getActivity(), CartActivity.class);
                             Bundle args = new Bundle();
-                            args.putString("KEY", user_id);
-                            args.putSerializable("VALUE", (Serializable) u);
+                            args.putSerializable("USER", (Serializable) u);
+                            intent.putExtra("BUNDLE", args);
                             startActivity(intent);
                         }
                     });

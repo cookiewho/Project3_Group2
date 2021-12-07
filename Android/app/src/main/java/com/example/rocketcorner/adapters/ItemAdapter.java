@@ -23,10 +23,6 @@ import java.util.Map;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     Context context;
-    // TODO Create list of Items class & add to constructor
-
-    private String[] localDataSet; // this will be replaced by list of Items
-
     public ArrayList<Map.Entry<String, Product>> products;
     private OnItemListener OnItemListener;
     public ItemAdapter(Context context, ArrayList<Map.Entry<String, Product>> products, OnItemListener itemListener){
