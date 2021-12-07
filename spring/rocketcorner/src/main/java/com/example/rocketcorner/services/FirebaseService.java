@@ -27,6 +27,28 @@ public class FirebaseService {
         }
     }
 
+    public double updateFunds(String userId, Double newFunds) throws ExecutionException, InterruptedException {
+        try {
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            DocumentReference IDdocRef = dbFirestore.collection("users").document(userId);
+
+            DocumentSnapshot docSnap = IDdocRef.get().get();
+            if (docSnap.exists()) {
+                Map<String, Object> data = IDdocRef.get().get().getData();
+                Double newFund_amount = (Double) data.get("balance") + newFunds;
+                System.out.println(newFund_amount);
+                ApiFuture<WriteResult> writeResultAF = IDdocRef.update("balance", newFund_amount);
+                Map<String, Object> result = dbFirestore.collection("users").document(userId).get().get().getData();
+
+                return (Double) result.get("balance");
+            } else {
+                return -1;
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public String updateUserDetails(String userId, HashMap<String, Object> updates) throws InterruptedException, ExecutionException {
         try {
             Firestore dbFirestore = FirestoreClient.getFirestore();
