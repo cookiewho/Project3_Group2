@@ -161,7 +161,7 @@ public class UserRoutes {
             return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
         }
 
-            cartUpdatesMapStr = "{"+ cartUpdatesMapStr + "}";
+            cartUpdatesMapStr = cartUpdatesMapStr;
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Integer> cartUpdatesMap;
 
@@ -192,6 +192,37 @@ public class UserRoutes {
 
             if(currUser.getPassword() != password) {
                 return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>(currUser.getCart(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/clearCart")
+    public ResponseEntity<?> clearCart(@RequestParam String userId, @RequestParam String password) {
+        try {
+            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+            User currUser = firebaseService.getUser(userId).get(userId);
+            if(currUser.getPassword() != password) {
+                return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
+            }
+
+            double total_spent = 0;
+
+            for(Map.Entry x : currUser.getCart().entrySet()) {
+                total_spent = firebaseService.getProduct(x.getKey().toString()).get(x.getKey().toString()).getPrice() * Integer.parseInt(x.getValue().toString());
+            }
+
+            if(total_spent > currUser.getBalance()) {
+                return new ResponseEntity<>("Not Enough Money", HttpStatus.BAD_REQUEST);
+            } else {
+                currUser.setBalance(currUser.getBalance() - total_spent);
+                firebaseService.updateCart(userId, new HashMap<>());
+
+                return new ResponseEntity<>("Purchased $" + String.valueOf(total_spent) + " of items", HttpStatus.OK);
             }
 
         } catch (Exception e) {
