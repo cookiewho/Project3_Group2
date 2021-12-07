@@ -98,13 +98,7 @@ public class AccountFragment extends Fragment {
             startActivity(intent);
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        rocketInterface rocketApi = retrofit.create(rocketInterface.class);
-        Call<Map<String, User>> call = com.example.rocketcorner.rocketApi.createService().getUserData(user_id);
+        Call<Map<String, User>> call = rocketApi.createService().getUserData(user_id);
         call.enqueue(new Callback<Map<String, User>>() {
             @Override
             public void onResponse(Call<Map<String, User>> call, Response<Map<String, User>> response) {

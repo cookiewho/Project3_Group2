@@ -20,4 +20,6 @@ public interface rocketInterface {
     Call<Map<String, Product>> getAllProdData();
     @GET("getUser")
     Call<Map<String, User>> getUserData(@Query("userId") String userId);
+    @GET("clearCart")
+    Call<String> purchase(@Query("userId") String userId, @Query("password") String password);
 }
