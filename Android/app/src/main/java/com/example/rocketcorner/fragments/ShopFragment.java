@@ -1,37 +1,58 @@
 package com.example.rocketcorner.fragments;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.AsyncTaskLoader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.rocketcorner.ItemDetailsActivity;
+import com.example.rocketcorner.Product;
 import com.example.rocketcorner.R;
-import com.example.rocketcorner.StoreActivity;
 import com.example.rocketcorner.adapters.ItemAdapter;
-import com.example.rocketcorner.profileActivity;
 
+import com.example.rocketcorner.rocketInterface;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ShopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShopFragment extends Fragment {
+public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private RecyclerView rv;
+    public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
+    HashMap<String, Product> products = new HashMap<>();
+    ArrayList<Map.Entry<String, Product>> product_list = new ArrayList<>();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -72,22 +93,57 @@ public class ShopFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
-        RecyclerView rv = view.findViewById(R.id.rvItems);
 
-        List<String>  items = new ArrayList<>();
-        List<String> images = new ArrayList<>();
-        final ItemAdapter adapter = new ItemAdapter(view.getContext(), items, images);
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        items.add("Slowpoke Tail");
-        items.add("Pikachu");
-        items.add("Dragonair");
-        images.add("https://i.imgur.com/tySRzD6.jpg");
-        images.add("https://i.imgur.com/Zq0iBJK.jpg");
-        images.add("https://i.imgur.com/GrwUHJO.png");
-        adapter.notifyDataSetChanged();
+        rocketInterface rocketApi = retrofit.create(rocketInterface.class);
+        Call<Map<String, Product>> call = rocketApi.getProdData();
+        ShopFragment sh = this;
+
+        call.enqueue(new Callback<Map<String, Product>>() {
+            @Override
+            public void onResponse(Call<Map<String, Product>> call, Response<Map<String, Product>> response) {
+                if (!response.isSuccessful()) {
+                    Log.d("== Response ==", "Response is outside of the 200-300 range!");
+                    return;
+                }
+
+
+                Map<String, Product> m = response.body();
+                for (Map.Entry<String, Product> e: m.entrySet()){
+                    product_list.add(e);
+                }
+
+                rv = view.findViewById(R.id.rvItems);
+                final ItemAdapter adapter = new ItemAdapter(view.getContext(), product_list, sh);
+                rv.setAdapter(adapter);
+                rv.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Product>> call, Throwable t) {
+                Log.d("== ERROR ==", t.getMessage());
+            }
+        });
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        String k = product_list.get(position).getKey();
+        Product p = product_list.get(position).getValue();
+
+        Intent intent = new Intent(getActivity(), ItemDetailsActivity.class);
+        Bundle args = new Bundle();
+        args.putString("KEY", k);
+        args.putSerializable("VALUE", (Serializable) p);
+        intent.putExtra("BUNDLE",args);
+        startActivity(intent);
     }
 }
