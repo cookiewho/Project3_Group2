@@ -152,16 +152,9 @@ public class UserRoutes {
     }
 
     @PatchMapping("/updateCart")
-    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String password, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
         try {
-        HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
-        User currUser = firebaseService.getUser(userId).get(userId);
-
-        if(currUser.getPassword() != password) {
-            return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
-        }
-
-            cartUpdatesMapStr = cartUpdatesMapStr;
+            cartUpdatesMapStr = "{"+ cartUpdatesMapStr + "}";
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Integer> cartUpdatesMap;
 
@@ -184,13 +177,13 @@ public class UserRoutes {
         }
     }
 
+
     @GetMapping("/getCart")
     public ResponseEntity<?> getCart(@RequestParam String userId, @RequestParam String password) {
         try {
-            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
             User currUser = firebaseService.getUser(userId).get(userId);
 
-            if(currUser.getPassword() != password) {
+            if(!currUser.getPassword().equals(password)) {
                 return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(currUser.getCart(), HttpStatus.OK);
@@ -206,14 +199,18 @@ public class UserRoutes {
         try {
             HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
             User currUser = firebaseService.getUser(userId).get(userId);
-            if(currUser.getPassword() != password) {
+
+            if(!currUser.getPassword().equals(password)) {
                 return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
             }
 
             double total_spent = 0;
 
-            for(Map.Entry x : currUser.getCart().entrySet()) {
-                total_spent = firebaseService.getProduct(x.getKey().toString()).get(x.getKey().toString()).getPrice() * Integer.parseInt(x.getValue().toString());
+            Map<String, Integer> myMap = currUser.getCart();
+
+            for(Map.Entry<String, Integer> x : myMap.entrySet()) {
+                double price = firebaseService.getProduct(x.getKey()).get(x.getKey()).getPrice();
+                total_spent +=  price * x.getValue();
             }
 
             if(total_spent > currUser.getBalance()) {
@@ -226,7 +223,7 @@ public class UserRoutes {
             }
 
         } catch (Exception e) {
-            System.out.print(e);
+            System.out.println(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
