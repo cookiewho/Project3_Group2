@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.rocketcorner.ItemDetailsActivity;
 import com.example.rocketcorner.Product;
@@ -100,7 +101,7 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
                 .build();
 
         rocketInterface rocketApi = retrofit.create(rocketInterface.class);
-        Call<Map<String, Product>> call = rocketApi.getProdData();
+        Call<Map<String, Product>> call = rocketApi.getAllProdData();
         ShopFragment sh = this;
 
         call.enqueue(new Callback<Map<String, Product>>() {
@@ -128,6 +129,7 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
             @Override
             public void onFailure(Call<Map<String, Product>> call, Throwable t) {
                 Log.d("== ERROR ==", t.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

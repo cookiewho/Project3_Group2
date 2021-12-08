@@ -1,11 +1,11 @@
 package com.example.rocketcorner;
 
-//import android.content.Intent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,19 +21,28 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView register;
     private EditText editTextUsername, editTextPassword;
     private Button signIn;
 
-    private boolean mAuth;
     private ProgressBar progressBar;
-    private Button button;
-    public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        String user_id = pref.getString("user_id", null);
+
+        if(user_id != null) {
+            Intent intent = MainActivity.getIntent(getApplicationContext());
+            startActivity(intent);
+        }
+
         setContentView(R.layout.activity_login);
 
         register = (TextView) findViewById(R.id.register);
@@ -60,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.register:
                 startActivity(new Intent(this, RegisterUser.class));
-                https://open.spotify.com/track/2RUvz4aDVp9zNua4v3dIjy     break;
+                rohttps://open.spotify.com/track/2RUvz4aDVp9zNua4v3dIjy     break;
 
             case R.id.signIn:
                 try {
@@ -104,7 +113,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.code() == 200)
                 {
                     String apiResponse = response.body();
-                    System.out.println("Respnse: " + apiResponse);
 
                     SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
@@ -122,6 +130,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     System.out.println("Request Error :: " + response.errorBody().toString());
                     Toast.makeText(LoginActivity.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
                 }
+
             }
 
             @Override

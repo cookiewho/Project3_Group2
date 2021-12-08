@@ -16,11 +16,13 @@ public interface rocketInterface {
     @POST("login")
     Call<String> loginUser(@Query("username") String username, @Query("password") String password);
     @GET("getAllUsers")
-    Call<Map<String, User>> getUserData();
-    @GET("getAllProducts")
-    Call<Map<String, Product>> getProdData();
+    Call<Map<String, User>> getAllUserData();
     @PATCH("/updateCart")
     Call<Map<String, Integer>> updateCart(@Query("userId") String userId, @Query("password") String password, @Query("cartUpdatesMapStr") String cartUpdatesMapStr);
     @GET("/getCart")
     Call<Map<String, Integer>> getCart(@Query("userId") String userId, @Query("password") String password);
+    @GET("getAllProducts")
+    Call<Map<String, Product>> getAllProdData();
+    @GET("getUser")
+    Call<Map<String, User>> getUserData(@Query("userId") String userId);
 }
