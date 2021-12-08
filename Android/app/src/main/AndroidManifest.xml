@@ -9,7 +9,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RocketCorner"
+        android:theme="@style/RocketCornerTheme"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ItemDetailsActivity"
@@ -27,7 +27,8 @@
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/RocketCornerThemeGood">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
