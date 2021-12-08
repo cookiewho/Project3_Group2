@@ -252,7 +252,7 @@ public class UserRoutes {
             }
 
             if(total_spent > currUser.getBalance()) {
-                return new ResponseEntity<>("Not Enough Funds.", HttpStatus.OK);
+                return new ResponseEntity<>("Not Enough Funds.", HttpStatus.FORBIDDEN);
             } else {
                 currUser.setBalance(currUser.getBalance() - total_spent);
                 firebaseService.updateCart(userId, new HashMap<>());
