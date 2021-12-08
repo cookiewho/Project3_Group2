@@ -7,6 +7,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,8 +23,9 @@ import retrofit2.Response;
 
 public class RegisterUser extends AppCompatActivity implements  View.OnClickListener{
 
-    private TextView banner, registerUser;
+    private TextView registerUser;
     private EditText editTextFullName, editTextEmail, editTextPassword;
+    private ImageView banner;
     private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
@@ -34,7 +36,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
 
-        banner = (TextView) findViewById(R.id.banner);
+        banner = (ImageView) findViewById(R.id.banner);
         banner.setOnClickListener(this);
 
         registerUser = (Button) findViewById(R.id.registerUser);

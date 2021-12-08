@@ -15,13 +15,14 @@
             android:name=".ItemDetailsActivity"
             android:exported="true"
             android:label="@string/title_activity_item_details"
-            android:theme="@style/Theme.RocketCorner.NoActionBar" />
+            android:theme="@style/RocketCornerTheme.NoNav" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
         <activity
             android:name=".RegisterUser"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/RocketCornerThemeGood"/>
         <activity
             android:name=".CartActivity"
             android:exported="true" />

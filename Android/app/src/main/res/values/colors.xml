@@ -9,6 +9,11 @@
     <color name="blue_light">#30CDFF</color>
     <color name="blue_dark">#31ADFF</color>
     <color name="blue">#30CDFF</color>
+    <color name="lightGrey">#424242</color>
+    <color name="Grey">#333333</color>
+    <color name="darkGrey">#252525</color>
+    <color name="darkerGrey">#1C1C1C</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="off_grey">#9E9E9E</color>
 </resources>

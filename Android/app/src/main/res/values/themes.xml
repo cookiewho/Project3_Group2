@@ -2,9 +2,11 @@
     <!-- Base application theme. -->
     <style name="RocketCornerTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+
         <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryDark">@color/red_dark</item>
         <item name="colorAccent">@color/red_light</item>
+        <item name="android:textColor">@color/off_grey</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -25,7 +27,7 @@
         <item name="android:textColorHint">#ffff</item>
     </style>
 
-    <style name="Theme.RocketCorner.NoActionBar">
+    <style name="RocketCornerTheme.NoNav">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
