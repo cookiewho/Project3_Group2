@@ -1,6 +1,8 @@
 package com.example.rocketcorner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,9 +14,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 
 public class ItemDetailsActivity extends AppCompatActivity {
@@ -23,9 +35,43 @@ public class ItemDetailsActivity extends AppCompatActivity {
     TextView desc;
     TextView price;
     Button buyButton;
+    Map<String, Integer> cartMap = new HashMap<>();
+    public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //first thing first we need to get the cart from the API
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        String username = pref.getString("user_id", "");
+        String password = pref.getString("user_password", "");
+        Call<Map<String, Integer>> callAsync = rocketApi.createService().getCart(username, password);
+        callAsync.enqueue(new Callback<Map<String, Integer>>() {
+            @Override
+            public void onResponse(Call<Map<String, Integer>> call, Response<Map<String, Integer>> response) {
+                if (response.code() == 200)
+                {
+                    cartMap = response.body();
+
+                } else if (response.code() == 403){
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(ItemDetailsActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
+                }
+                else if (response.code() == 500){
+                    System.out.println("Request Error :: " + response.errorBody().toString());
+                    Toast.makeText(ItemDetailsActivity.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Integer>> call, Throwable t) {
+                String m = call.request().url().toString();
+                System.out.println("Network Error :: " + t.getLocalizedMessage());
+                Toast.makeText(ItemDetailsActivity.this, "First Request Error, try again", Toast.LENGTH_LONG).show();
+            }
+        });
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_details);
 
@@ -56,8 +102,47 @@ public class ItemDetailsActivity extends AppCompatActivity {
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO get user and add to their cart via /updateCart
-                Toast.makeText(getApplicationContext(), "Item Added!", Toast.LENGTH_SHORT).show();
+                cartMap.put(id, cartMap.get(id) + 1);
+                ObjectMapper m = new ObjectMapper();
+                String mapStr = null;
+                try {
+                    mapStr = m.writeValueAsString(cartMap);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+                mapStr = mapStr.substring(1, mapStr.length() - 1);
+
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+                String username = pref.getString("user_id", "");
+                String password = pref.getString("user_password", "");
+                Call<Map<String, Integer>> callAsync = rocketApi.createService().updateCart(pref.getString(username, ""), pref.getString(password, ""), mapStr);
+                callAsync.enqueue(new Callback<Map<String, Integer>>() {
+                    @Override
+                    public void onResponse(Call<Map<String, Integer>> call, Response<Map<String, Integer>> response) {
+                        if (response.code() == 200)
+                        {
+                            cartMap = response.body();
+                            Toast.makeText(getApplicationContext(), "Item Added!", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = MainActivity.getIntent(getApplicationContext());
+                            startActivity(intent);
+                        } else if (response.code() == 403){
+                            System.out.println("Request Error :: " + response.errorBody().toString());
+                            Toast.makeText(ItemDetailsActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
+                        }
+                        else if (response.code() == 500){
+                            System.out.println("Request Error :: " + response.errorBody().toString());
+                            Toast.makeText(ItemDetailsActivity.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Map<String, Integer>> call, Throwable t) {
+                        System.out.println("Network Error :: " + t.getLocalizedMessage());
+                        Toast.makeText(ItemDetailsActivity.this, "Request Error, try again", Toast.LENGTH_LONG).show();
+                    }
+                });
+
             }
         });
 

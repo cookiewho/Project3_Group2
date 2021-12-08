@@ -177,6 +177,7 @@ public class UserRoutes {
                 return new ResponseEntity<>(updatedCart, HttpStatus.OK);
             }
             return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
+
         } catch (Exception e) {
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -220,7 +221,7 @@ public class UserRoutes {
             }
 
             if(total_spent > currUser.getBalance()) {
-                return new ResponseEntity<>("Not Enough Money", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Not Enough Funds.", HttpStatus.OK);
             } else {
                 currUser.setBalance(currUser.getBalance() - total_spent);
                 firebaseService.updateCart(userId, new HashMap<>());

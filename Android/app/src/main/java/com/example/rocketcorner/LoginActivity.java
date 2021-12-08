@@ -3,6 +3,7 @@ package com.example.rocketcorner;
 //import android.content.Intent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.view.View;
@@ -45,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editTextPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+
     }
 
 
@@ -58,7 +60,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.register:
                 startActivity(new Intent(this, RegisterUser.class));
-                break;
+                https://open.spotify.com/track/2RUvz4aDVp9zNua4v3dIjy     break;
 
             case R.id.signIn:
                 try {
@@ -104,7 +106,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     String apiResponse = response.body();
                     System.out.println("Respnse: " + apiResponse);
 
-                    //add userId to persistence here
+                    SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("user_id", apiResponse);
+                    editor.putString("user_password", password);
+                    editor.apply();
 
                     Intent intent = MainActivity.getIntent(getApplicationContext());
                     startActivity(intent);
