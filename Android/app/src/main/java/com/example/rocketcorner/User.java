@@ -1,9 +1,10 @@
 package com.example.rocketcorner;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class User {
+public class User implements Serializable {
     public String username;
     public String email;
     private String password;

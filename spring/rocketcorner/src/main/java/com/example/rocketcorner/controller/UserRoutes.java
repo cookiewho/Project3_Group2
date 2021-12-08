@@ -32,6 +32,22 @@ public class UserRoutes {
         }
     }
 
+    @PatchMapping("/updateFunds")
+    public ResponseEntity<?> updateFunds(@RequestParam String userId, @RequestParam Double newFunds) throws ExecutionException, InterruptedException {
+        double funds;
+
+        try {
+            funds = firebaseService.updateFunds(userId, newFunds);
+            if (funds == -1){
+                return new ResponseEntity<>("INVALID USERID", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>(funds, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.print(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PatchMapping("/updateUser")
     public ResponseEntity<?> updateUser(@RequestParam String userId, @RequestParam String new_username, @RequestParam String new_email, @RequestParam String new_password) throws ExecutionException, InterruptedException {
         HashMap<String, User> userHashMap;

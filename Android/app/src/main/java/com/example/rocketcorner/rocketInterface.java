@@ -15,8 +15,9 @@ public interface rocketInterface {
     @POST("login")
     Call<String> loginUser(@Query("username") String username, @Query("password") String password);
     @GET("getAllUsers")
-    Call<Map<String, User>> getUserData();
+    Call<Map<String, User>> getAllUserData();
     @GET("getAllProducts")
-    Call<Map<String, Product>> getProdData();
-
+    Call<Map<String, Product>> getAllProdData();
+    @GET("getUser")
+    Call<Map<String, User>> getUserData(@Query("userId") String userId);
 }
