@@ -5,6 +5,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -20,4 +21,8 @@ public interface rocketInterface {
     Call<Map<String, Product>> getAllProdData();
     @GET("getUser")
     Call<Map<String, User>> getUserData(@Query("userId") String userId);
+    Call<Map<String, Product>> getProdData();
+    @PATCH("updateFunds")
+    Call<Double> updateFunds(@Query("userId") String userId, @Query("newFunds") double newFunds);
+
 }
