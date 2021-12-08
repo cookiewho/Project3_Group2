@@ -35,14 +35,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
     TextView desc;
     TextView price;
     Button buyButton;
-    Map<String, Integer> cartMap = new HashMap<>();
+    Map<String, Integer> cartMap;
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //first thing first we need to get the cart from the API
-
+        cartMap = new HashMap<>();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         String username = pref.getString("user_id", "");
         String password = pref.getString("user_password", "");
@@ -102,7 +102,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cartMap.put(id, cartMap.get(id) + 1);
+                Integer value = cartMap.get(id);
+                if (value !=null) {
+                    cartMap.put(id, value + 1);
+                } else {
+                    cartMap.put(id, 1);
+                }
+
                 ObjectMapper m = new ObjectMapper();
                 String mapStr = null;
                 try {
@@ -115,7 +121,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
                 String username = pref.getString("user_id", "");
                 String password = pref.getString("user_password", "");
-                Call<Map<String, Integer>> callAsync = rocketApi.createService().updateCart(pref.getString(username, ""), pref.getString(password, ""), mapStr);
+                Call<Map<String, Integer>> callAsync = rocketApi.createService().updateCart(username, password, mapStr);
                 callAsync.enqueue(new Callback<Map<String, Integer>>() {
                     @Override
                     public void onResponse(Call<Map<String, Integer>> call, Response<Map<String, Integer>> response) {
@@ -126,6 +132,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
                             Intent intent = MainActivity.getIntent(getApplicationContext());
                             startActivity(intent);
+                            
                         } else if (response.code() == 403){
                             System.out.println("Request Error :: " + response.errorBody().toString());
                             Toast.makeText(ItemDetailsActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();

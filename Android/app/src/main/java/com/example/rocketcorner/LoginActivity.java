@@ -69,8 +69,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.register:
                 startActivity(new Intent(this, RegisterUser.class));
-                rohttps://open.spotify.com/track/2RUvz4aDVp9zNua4v3dIjy     break;
-
             case R.id.signIn:
                 try {
                     userLogin();

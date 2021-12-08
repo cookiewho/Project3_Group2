@@ -169,16 +169,23 @@ public class UserRoutes {
 
     @PatchMapping("/updateCart")
     public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String password, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
+        System.out.println("are we here?");
         try {
-            User currUser = firebaseService.getUser(userId).get(userId);
 
+           User currUser = firebaseService.getUser(userId).get(userId);
+           
             if(!currUser.getPassword().equals(password)) {
                 return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
             }
 
+            System.out.println("checkpoint2");
+
             cartUpdatesMapStr = "{"+ cartUpdatesMapStr + "}";
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Integer> cartUpdatesMap;
+
+            System.out.println("checkpoint3");
+
 
             // Make sure cart format is correct
             try {
@@ -187,15 +194,23 @@ public class UserRoutes {
                 return new ResponseEntity<>("Invalid Cart Formatting", HttpStatus.FORBIDDEN);
             }
 
+            System.out.println("checkpoint4");
+
+
             // call db to update cart
             Map<String, Integer> updatedCart = firebaseService.updateCart(userId, cartUpdatesMap);
             if(updatedCart != null) {
                 return new ResponseEntity<>(updatedCart, HttpStatus.OK);
             }
+
+            System.out.println("checkpoint 5");
+
             return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
 
         } catch (Exception e) {
-            System.out.print(e);
+            System.out.println("ROB LOOK HERE");
+            e.printStackTrace();
+            System.out.println();
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
