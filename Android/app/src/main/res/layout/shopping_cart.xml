@@ -24,10 +24,13 @@
 
     <Button
         android:id="@+id/purchase"
-        android:layout_width="match_parent"
+        android:layout_width="50mm"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:shadowColor="@color/black"
+        android:layout_marginBottom="5dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
         android:text="Checkout" />
 
 
