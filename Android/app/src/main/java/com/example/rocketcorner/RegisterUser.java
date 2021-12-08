@@ -47,6 +47,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
         editTextPassword = (EditText) findViewById(R.id.password);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -66,31 +67,37 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
         String email = editTextEmail.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        Integer err = 0;
 
 //        Checks if fields are entered and valid
         if(fullName.isEmpty()){
             editTextFullName.setError("Name is required");
             editTextFullName.requestFocus();
-            return;
+            err +=1;
         }
         if(email.isEmpty()){
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
-            return;
+            err +=1;
         }
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             editTextEmail.setError("Please provide valid email");
             editTextEmail.requestFocus();
-            return;
+            err +=1;
         }
         if(password.isEmpty()){
             editTextPassword.setError("Password is required");
             editTextPassword.requestFocus();
-            return;
+            err +=1;
         }
-        if(password.length() < 6){
+        if(password.length() > 0 && password.length() < 6){
             editTextPassword.setError("Password must be more than 6 characters");
             editTextPassword.requestFocus();
+            err +=1;
+        }
+
+        if (err>=1){
+            progressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -98,7 +105,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
         callAsync.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.INVISIBLE);
                 System.out.println(response.toString());
                 if (response.code() == 200)
                 {
@@ -116,6 +123,10 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
                     else if (response.code() == 500){
                     System.out.println("Request Error :: " + response.errorBody().toString());
                     Toast.makeText(RegisterUser.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    System.out.println("Improper request Type :: " + response.code());
+                    Toast.makeText(RegisterUser.this, "Devs didn't update the request type :^(", Toast.LENGTH_LONG).show();
                 }
             }
 

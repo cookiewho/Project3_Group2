@@ -85,21 +85,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressBar.setVisibility(View.VISIBLE);
         String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        Integer err = 0;
 
         if(username.isEmpty()){
             editTextUsername.setError("Username is required");
             editTextUsername.requestFocus();
-            return;
+            err +=1;
         }
 
         if(password.isEmpty()){
             editTextPassword.setError("Password is required");
             editTextPassword.requestFocus();
-            return;
+            err +=1;
         }
-        if(password.length() < 6){
+        if(password.length() > 0 && password.length() < 6){
             editTextPassword.setError("Min password length is 6 characters");
             editTextPassword.requestFocus();
+            err +=1;
+        }
+
+        if (err>=1){
+            progressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -127,6 +133,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else if (response.code() == 500){
                     System.out.println("Request Error :: " + response.errorBody().toString());
                     Toast.makeText(LoginActivity.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    System.out.println("Improper request Type :: " + response.code());
+                    Toast.makeText(LoginActivity.this, "Devs didn't update the request type :^(", Toast.LENGTH_LONG).show();
                 }
 
             }

@@ -135,7 +135,12 @@ public class FundsFragment extends Fragment {
                     System.out.println("Request Error :: " + response.errorBody().toString());
                     Toast.makeText(getActivity(), "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
                 }
+                else{
+                    System.out.println("Improper request Type :: " + response.code());
+                    Toast.makeText(getActivity(), "Devs didn't update the request type :^(", Toast.LENGTH_LONG).show();
+                }
             }
+
 
             @Override
             public void onFailure(Call<Double> call, Throwable t) {
