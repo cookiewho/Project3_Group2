@@ -31,6 +31,11 @@ import com.example.rocketcorner.HomeAdaptersHelperClasses.MostViewedHelperClass;
 import com.example.rocketcorner.fragments.ShopFragment;
 
 import java.util.ArrayList;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private GradientDrawable gradient1, gradient2, gradient3, gradient4;
     private Button shop;
     private Button profile;
+    public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +84,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         gradient3 = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{0xfff7c59f, 0xFFf7c59f});
         gradient4 = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{0xffb8d7f5, 0xffb8d7f5});
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
         ArrayList<CategoriesHelperClass> categoriesHelperClasses = new ArrayList<>();
         categoriesHelperClasses.add(new CategoriesHelperClass(gradient1, R.drawable.search_icon, "Education"));
@@ -96,6 +106,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void mostViewedRecycler() {
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
         mostViewedRecycler.setHasFixedSize(true);
         mostViewedRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -112,6 +127,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void featuredRecycler() {
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        rocketInterface rocketApi = retrofit.create(rocketInterface.class);
+        Call<Map<String, Product>> call = rocketApi.getAllProdData();
 
         featuredRecycler.setHasFixedSize(true);
         featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
