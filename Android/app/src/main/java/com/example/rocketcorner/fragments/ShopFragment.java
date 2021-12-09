@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocketcorner.ItemDetailsActivity;
@@ -58,6 +59,7 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
     private String mParam1;
     private String mParam2;
 
+
     public ShopFragment() {
         // Required empty public constructor
     }
@@ -82,6 +84,7 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
 
     @Override
     public void onCreate(Bundle savedInstanceState)  {
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
