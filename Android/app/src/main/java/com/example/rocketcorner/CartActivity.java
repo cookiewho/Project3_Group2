@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -32,6 +33,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CartActivity extends AppCompatActivity {
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
     Map<String, Product> allProd;
+
+    ProgressBar progressBar;
+
     Button purchase;
     double balance = 0;
     String user_id;
@@ -52,6 +56,8 @@ public class CartActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle args = intent.getBundleExtra("BUNDLE");
         User u = (User) args.getSerializable("USER");
+        progressBar = findViewById(R.id.progressbar_cart);
+        progressBar.setVisibility(View.VISIBLE);
 
 
         Call<Map<String, Product>> call = rocketApi.createService().getAllProdData();
@@ -74,6 +80,7 @@ public class CartActivity extends AppCompatActivity {
                 final CartAdapter adapter = new CartAdapter(getApplicationContext(), cart_list);
                 rv.setAdapter(adapter);
                 rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                progressBar.setVisibility(View.INVISIBLE);
                 adapter.notifyDataSetChanged();
             }
 

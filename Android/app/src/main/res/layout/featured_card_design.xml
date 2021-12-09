@@ -26,8 +26,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/baloo"
             android:lineHeight="23dp"
-            android:text="McDonald's"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/off_grey"
             android:textSize="20sp" />
 
         <RatingBar
@@ -39,8 +38,7 @@
         <TextView
             android:id="@+id/featured_desc"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="asbkd asudhlasn saudnas jasdjasl hisajdl asjdlnas" />
+            android:layout_height="wrap_content"/>
 
 
     </LinearLayout>

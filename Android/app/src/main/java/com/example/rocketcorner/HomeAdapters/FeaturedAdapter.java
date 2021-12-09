@@ -1,5 +1,6 @@
 package com.example.rocketcorner.HomeAdapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.rocketcorner.HomeAdaptersHelperClasses.FeaturedHelperClass;
 import com.example.rocketcorner.R;
 
@@ -16,9 +18,11 @@ import java.util.ArrayList;
 
 public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.FeaturedViewHolder> {
 
+    Context context;
     ArrayList<FeaturedHelperClass> featuredLocations;
 
-    public FeaturedAdapter(ArrayList<FeaturedHelperClass> featuredLocations) {
+    public FeaturedAdapter(Context context, ArrayList<FeaturedHelperClass> featuredLocations) {
+        this.context = context;
         this.featuredLocations = featuredLocations;
     }
 
@@ -26,8 +30,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.Featur
     @Override
     public FeaturedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.featured_card_design, parent, false);
-        FeaturedViewHolder featuredViewHolder = new FeaturedViewHolder(view);
-        return featuredViewHolder;
+        return new FeaturedViewHolder(view);
     }
 
     @Override
@@ -35,7 +38,8 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.Featur
 
         FeaturedHelperClass featuredHelperClass = featuredLocations.get(position);
 
-        holder.image.setImageResource(featuredHelperClass.getImage());
+        Glide.with(context).load(featuredHelperClass.getImage()).into(holder.image);
+//        holder.image.setImageResource(featuredHelperClass.getImage());
         holder.title.setText(featuredHelperClass.getTitle());
         holder.desc.setText(featuredHelperClass.getDescription());
 

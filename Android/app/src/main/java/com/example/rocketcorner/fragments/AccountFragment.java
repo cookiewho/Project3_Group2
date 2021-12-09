@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class AccountFragment extends Fragment  {
     private TextView username;
     private TextView funds;
 
+    ProgressBar progressBar;
     RecyclerView featuredItemsRecycler;
     RecyclerView.Adapter adapter;
 
@@ -116,6 +118,9 @@ public class AccountFragment extends Fragment  {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        progressBar = view.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         username = view.findViewById(R.id.username);
         funds = view.findViewById(R.id.funds);
         featuredItemsRecycler = view.findViewById(R.id.featured_Items);
@@ -129,18 +134,16 @@ public class AccountFragment extends Fragment  {
             startActivity(intent);
         }
 
+        loadUserData();
+
         featuredItemsRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        ArrayList<FeaturedHelperClass> featuredItems = new ArrayList<>();
+        fillItems();
 
+        return view;
+    }
 
-        featuredItems.add(new FeaturedHelperClass(R.drawable.berry, "Bluk Berry", "A Berry which is very rare in the Unova region."));
-        featuredItems.add(new FeaturedHelperClass(R.drawable.ball, "Dive Ball", "A somewhat different Poké Ball that works especially well on Pokémon that live underwater."));
-        featuredItems.add(new FeaturedHelperClass(R.drawable.root, "Root Fossil", "A fossil of an ancient Pokémon that lived in the sea. It appears to be part of a plant root.\n"));
-
-        adapter = new FeaturedAdapter(featuredItems);
-        featuredItemsRecycler.setAdapter(adapter);
-
+    public void loadUserData(){
         Call<Map<String, User>> call = rocketApi.createService().getUserData(user_id);
         call.enqueue(new Callback<Map<String, User>>() {
             @Override
@@ -181,8 +184,42 @@ public class AccountFragment extends Fragment  {
                 Toast.makeText(getActivity().getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        return view;
+    public ArrayList<FeaturedHelperClass> fillItems(){
+        ArrayList<FeaturedHelperClass> featuredItems = new ArrayList<>();
+
+        Call<Map<String, Product>> itemCall = rocketApi.createService().getAllProdData();
+        itemCall.enqueue(new Callback<Map<String, Product>>() {
+            @Override
+            public void onResponse(Call<Map<String, Product>> call, Response<Map<String, Product>> response) {
+                if (response.code() == 200) {
+                    Map<String, Product> m = response.body();
+                    for (Map.Entry<String, Product> e: m.entrySet()){
+                        Product prod = e.getValue();
+                        if( prod.getName().equals("Bluk Berry") || prod.getName().equals("Slowpoke Tail") || prod.getName().equals("Dive Ball")) {
+                            featuredItems.add(new FeaturedHelperClass(prod.getImgLink(), prod.getName(), prod.getDesc()));
+                        }
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                    adapter = new FeaturedAdapter(getContext(), featuredItems);
+                    featuredItemsRecycler.setAdapter(adapter);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Product>> call, Throwable t) {
+                System.out.println("ERROR: "+t.getLocalizedMessage());
+                progressBar.setVisibility(View.INVISIBLE);
+                System.out.println("Network Error :: " + t.getLocalizedMessage());
+                Toast.makeText(getActivity(), "Request Error, try again", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        return featuredItems;
     }
 
 }

@@ -2,17 +2,16 @@ package com.example.rocketcorner.HomeAdaptersHelperClasses;
 
 public class FeaturedHelperClass {
 
-    int image;
-    String title, description;
+    String imgLink, title, description;
 
-    public FeaturedHelperClass(int image, String title, String description) {
-        this.image = image;
+    public FeaturedHelperClass(String imgLink, String title, String description) {
+        this.imgLink = imgLink;
         this.title = title;
         this.description = description;
     }
 
-    public int getImage() {
-        return image;
+    public String getImage() {
+        return imgLink;
     }
 
     public String getTitle() {
