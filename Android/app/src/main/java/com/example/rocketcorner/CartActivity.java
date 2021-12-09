@@ -86,7 +86,7 @@ public class CartActivity extends AppCompatActivity {
         purchase = findViewById(R.id.purchase);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         user_id = pref.getString("user_id", null);
-        password = pref.getString("password", null);
+        password = pref.getString("user_password", null);
         purchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,10 +95,17 @@ public class CartActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         String result = response.body();
+
                         Log.d("==TEST==", result);
                         AlertDialog.Builder alert = new AlertDialog.Builder(CartActivity.this);
                         alert.setMessage(result);
-                        alert.setNegativeButton(android.R.string.ok, null);
+                        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = MainActivity.getIntent(getApplicationContext());
+                                startActivity(intent);
+                            }
+                        });
                         alert.show();
                     }
 
