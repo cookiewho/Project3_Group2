@@ -22,6 +22,7 @@ import com.example.rocketcorner.Product;
 import com.example.rocketcorner.R;
 import com.example.rocketcorner.adapters.ItemAdapter;
 
+import com.example.rocketcorner.rocketApi;
 import com.example.rocketcorner.rocketInterface;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -95,15 +96,9 @@ public class ShopFragment extends Fragment implements ItemAdapter.OnItemListener
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        rocketInterface rocketApi = retrofit.create(rocketInterface.class);
-        Call<Map<String, Product>> call = rocketApi.getAllProdData();
+        Call<Map<String, Product>> call = rocketApi.createService().getAllProdData();
         ShopFragment sh = this;
-
         call.enqueue(new Callback<Map<String, Product>>() {
             @Override
             public void onResponse(Call<Map<String, Product>> call, Response<Map<String, Product>> response) {
