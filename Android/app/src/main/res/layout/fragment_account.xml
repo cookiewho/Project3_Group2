@@ -26,7 +26,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="50dp"
                     android:fontFamily="@font/brandon_grotesque_black"
-                    android:text="Welcome username!"
                     android:textColor="@color/off_grey"
                     android:textSize="28sp" />
 
@@ -114,7 +113,6 @@
         android:layout_marginTop="30dp"
         android:layout_marginBottom="80dp"
         android:fontFamily="@font/brandon_grotesque_black"
-        android:text="$0.00"
         android:textColor="@color/off_grey"
         android:textSize="28sp" />
     <Button
