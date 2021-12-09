@@ -7,6 +7,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,8 +23,9 @@ import retrofit2.Response;
 
 public class RegisterUser extends AppCompatActivity implements  View.OnClickListener{
 
-    private TextView banner, registerUser;
+    private TextView registerUser;
     private EditText editTextFullName, editTextEmail, editTextPassword;
+    private ImageView banner;
     private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
@@ -34,7 +36,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
 
-        banner = (TextView) findViewById(R.id.banner);
+        banner = (ImageView) findViewById(R.id.banner);
         banner.setOnClickListener(this);
 
         registerUser = (Button) findViewById(R.id.registerUser);
@@ -44,7 +46,9 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
 
-        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -64,77 +68,46 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
         String email = editTextEmail.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        Integer err = 0;
 
 //        Checks if fields are entered and valid
         if(fullName.isEmpty()){
             editTextFullName.setError("Name is required");
             editTextFullName.requestFocus();
-            return;
+            err +=1;
         }
         if(email.isEmpty()){
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
-            return;
+            err +=1;
         }
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             editTextEmail.setError("Please provide valid email");
             editTextEmail.requestFocus();
-            return;
+            err +=1;
         }
         if(password.isEmpty()){
             editTextPassword.setError("Password is required");
             editTextPassword.requestFocus();
-            return;
+            err +=1;
         }
-        if(password.length() < 6){
+        if(password.length() > 0 && password.length() < 6){
             editTextPassword.setError("Password must be more than 6 characters");
             editTextPassword.requestFocus();
+            err +=1;
+        }
+
+        if (err>=1){
+            progressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
-
-
-//        //progressBar.setVisibility(View.VISIBLE);
-//        mAuth = FirebaseAuth.getInstance();
-//        mAuth.createUserWithEmailAndPassword("test@gmail.com", "123456");
-//
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//
-//                        if(task.isSuccessful()){
-//                            User user = new User(fullName, email);
-//
-//                            FirebaseDatabase.getInstance().getReference("Users")
-//                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if(task.isSuccessful()){
-//                                        Toast.makeText(RegisterUser.this, "User has been registered", Toast.LENGTH_LONG).show();
-//                                        //progressBar.setVisibility(View.VISIBLE);
-//                                    }else{
-//                                        Toast.makeText(RegisterUser.this,"Failed to register! Try again!", Toast.LENGTH_LONG).show();
-//                                        //progressBar.setVisibility(View.GONE);
-//                                    }
-//                                }
-//                            });
-//
-//
-//                        }else{
-//                            Toast.makeText(RegisterUser.this,"Failed to register! Try again!", Toast.LENGTH_LONG).show();
-//                            //progressBar.setVisibility(View.GONE);
-//
-//                        }
-//                    }
-//                });
 
         Call<String> callAsync = rocketApi.createService().registerUser(fullName, email, password);
         callAsync.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.INVISIBLE);
                 System.out.println(response.toString());
                 if (response.code() == 200)
                 {
@@ -152,6 +125,10 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
                     else if (response.code() == 500){
                     System.out.println("Request Error :: " + response.errorBody().toString());
                     Toast.makeText(RegisterUser.this, "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    System.out.println("Improper request Type :: " + response.code());
+                    Toast.makeText(RegisterUser.this, "Devs didn't update the request type :^(", Toast.LENGTH_LONG).show();
                 }
             }
 

@@ -18,9 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#FAF0D3"
+        android:background="@color/red_dark"
         android:shadowColor="@color/black"
-        android:text="Shopping Cart"/>
+        android:text="Shopping Cart" />
 
 
 </RelativeLayout>
