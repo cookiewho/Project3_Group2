@@ -94,9 +94,12 @@ public class CartActivity extends AppCompatActivity {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        String result = response.body();
+                        String result = "Not enough funds.";
 
-                        Log.d("==TEST==", result);
+                        if(response.code() == 200) {
+                            result = response.body().toString();
+                        }
+
                         AlertDialog.Builder alert = new AlertDialog.Builder(CartActivity.this);
                         alert.setMessage(result);
                         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
