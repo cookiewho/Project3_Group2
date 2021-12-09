@@ -2,31 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/rocketc"
-    tools:context=".LoginActivity"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:background="@drawable/rocketc"
+    tools:context=".LoginActivity">
 
-
-    <TextView
+    <ImageView
         android:id="@+id/banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:fontFamily="@font/gotham"
-        android:text="Rocket Corner"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="#ffffff"
-
-        android:textSize="60sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_marginTop="44dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:srcCompat="@drawable/rocketcorner_logo3"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/bannerDescription"
@@ -34,27 +22,26 @@
         android:layout_height="wrap_content"
         android:text="Buy Pokemon Items!"
         android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@+id/banner"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-         />
+        app:layout_constraintTop_toBottomOf="@+id/banner" />
 
     <EditText
         android:id="@+id/username"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
+        android:drawableEnd="@drawable/ic_email"
         android:ems="10"
         android:hint="Username"
+        android:textColor="#ffff"
         android:textColorHint="#ffff"
         android:textSize="24sp"
-        android:drawableEnd="@drawable/ic_email"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bannerDescription"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/bannerDescription" />
     <!--        android:inputType="textEmailAdress"-->
 
     <EditText
@@ -62,17 +49,17 @@
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:drawableEnd="@drawable/ic_lock"
         android:ems="10"
         android:hint="Password"
-        android:drawableEnd="@drawable/ic_lock"
 
+        android:textColor="#ffff"
         android:textColorHint="#ffff"
         android:textSize="24sp"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
     <!--        android:inputType="textPassword"-->
 
     <Button
@@ -84,7 +71,7 @@
         android:backgroundTint="#0ED6B9"
         android:text="Login"
         android:textColor="#ffff"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
@@ -93,29 +80,28 @@
         android:id="@+id/forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="25dp"
         android:text="Forgot Password?"
+        android:textColor="#ffff"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#ffff"
-        app:layout_constraintTop_toBottomOf="@+id/signIn"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="50dp"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/signIn" />
 
     <TextView
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"
+        android:textColor="#ffff"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#ffff"
         app:layout_constraintLeft_toRightOf="@+id/forgotPassword"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/forgotPassword"
-        tools:layout_editor_absoluteX="228dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="228dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -132,5 +118,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.485"
         tools:ignore="MissingConstraints" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
