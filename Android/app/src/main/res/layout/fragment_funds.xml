@@ -10,6 +10,68 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Give us your money!"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginTop="150dp"
+        android:textColor="@color/off_grey"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="plz and thx >:]"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/off_grey"
+        android:gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:text="Balance: "
+                android:textColor="@color/off_grey"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/currBal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/off_grey"
+                />
+        </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:progressDrawable="@drawable/redprogress" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_gravity="center">
@@ -21,6 +83,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:textSize="24dp"
+            android:textColor="@color/off_grey"
             android:inputType="numberDecimal"/>
 
         <Button
@@ -30,16 +93,8 @@
             android:layout_weight="1"
             android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
-            android:text="Add Funds" />
+            android:text="Add Funds"
+            android:textColor="@color/off_grey"/>
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:progressDrawable="@drawable/redprogress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="200dp"
-        />
 
 </FrameLayout>
