@@ -95,10 +95,11 @@ public class CartActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         String result = response.body();
-
+                        Log.d("==TEST==", result);
                         AlertDialog.Builder alert = new AlertDialog.Builder(CartActivity.this);
                         alert.setMessage(result);
                         alert.setNegativeButton(android.R.string.ok, null);
+                        alert.show();
                     }
 
                     @Override

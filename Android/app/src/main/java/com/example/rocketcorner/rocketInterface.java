@@ -32,7 +32,7 @@ public interface rocketInterface {
     @GET("getUser")
     Call<Map<String, User>> getUserData(@Query("userId") String userId);
 
-    @GET("clearCart")
+    @POST("clearCart")
     Call<String> purchase(@Query("userId") String userId, @Query("password") String password);
 
     @PATCH("updateFunds")
