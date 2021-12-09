@@ -2,30 +2,31 @@ package com.example.rocketcorner;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
 //This class is for entering currency amount while keeping the right format as the user enters values
-public class NumberTextWatcher implements TextWatcher {
+public class NumberTextWatcherTV implements TextWatcher {
     private final DecimalFormat df;
-    private final EditText et;
+    private final TextView tv;
 
-    public NumberTextWatcher(EditText editText) {
+    public NumberTextWatcherTV(TextView textView) {
         df = new DecimalFormat("#,##0.00");
-        this.et = editText;
+        this.tv = textView;
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        et.removeTextChangedListener(this);
+        tv.removeTextChangedListener(this);
         //After all the text editing, if there is a string to validate - format it
         if (s != null && !s.toString().isEmpty()) {
             try {
                 //Take the input string and remove all formatting characters
                 if (df == null){
-                    et.setText("$0.00");
-                    et.addTextChangedListener(this);
+                    tv.setText("$0.00");
+                    tv.addTextChangedListener(this);
                     return;
                 }
                 String v = s.toString().replace(String.valueOf(df.getDecimalFormatSymbols().getGroupingSeparator()), "").replace("$","").replace(String.valueOf(df.getDecimalFormatSymbols().getDecimalSeparator()), "");
@@ -34,21 +35,21 @@ public class NumberTextWatcher implements TextWatcher {
                 //Get the decimal point correct again
                 n = n.doubleValue() / 100.0;
                 //Reformat the text with currency symbols, grouping places etc.
-                et.setText(df.format(n));
+                tv.setText(df.format(n));
                 //Add the Dollar symbol ($)
-                et.setText("$".concat(et.getText().toString()));
+                tv.setText("$".concat(tv.getText().toString()));
                 //Move the editing cursor back to the right place
-                et.setSelection(et.getText().length());
+                tv.setText(tv.getText().length());
 
             } catch (NumberFormatException | ParseException e) {
                 e.printStackTrace();
             }
         } else //if the input field is empty
         {
-            et.setText("$0.00");
+            tv.setText("$0.00");
         }
 
-        et.addTextChangedListener(this);
+        tv.addTextChangedListener(this);
     }
 
     @Override
