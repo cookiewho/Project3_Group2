@@ -15,6 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class rocketApi {
     private static String BASE_URL = "https://rocketcorner.herokuapp.com/";
@@ -25,7 +26,8 @@ public class rocketApi {
     private static Gson gson = new GsonBuilder().setLenient().create();
 
     private static Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
-            .client(client).addConverterFactory(GsonConverterFactory.create(gson)).build();
+            .client(client).addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson)).build();
     private rocketInterface apiService = retrofit.create(rocketInterface.class);
 
     public static rocketInterface createService(){

@@ -17,13 +17,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocketcorner.LoginActivity;
 import com.example.rocketcorner.MainActivity;
-import com.example.rocketcorner.NumberTextWatcher;
+import com.example.rocketcorner.NumberTextWatcherET;
+import com.example.rocketcorner.NumberTextWatcherTV;
 import com.example.rocketcorner.R;
+import com.example.rocketcorner.User;
 import com.example.rocketcorner.rocketApi;
+
+import java.text.DecimalFormat;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +47,9 @@ public class FundsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private final DecimalFormat df = new DecimalFormat("#,##0.00");
+
+    private TextView current_balance;
     private Button add_funds;
     private EditText amountText;
 
@@ -84,13 +93,20 @@ public class FundsFragment extends Fragment {
         inflater.getContext().setTheme(R.style.Theme_RocketCorner);
         View view = inflater.inflate(R.layout.fragment_funds, container, false);
 
-        add_funds = view.findViewById(R.id.add_funds);
-        amountText = view.findViewById(R.id.fundAmount);
-        amountText.addTextChangedListener(new NumberTextWatcher(amountText));
-        amountText.setText("$0.00");
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        current_balance = view.findViewById(R.id.currBal);
+        getCurrBalance();
+
+
+        add_funds = view.findViewById(R.id.add_funds);
+        amountText = view.findViewById(R.id.fundAmount);
+        amountText.addTextChangedListener(new NumberTextWatcherET(amountText));
+        amountText.setText("$0.00");
+
+
 
         add_funds.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +114,7 @@ public class FundsFragment extends Fragment {
                 String amountStr = amountText.getText().toString();
                 if ((amountStr != null || !amountStr.isEmpty()) && !amountStr.equals("$0.00")){
                     System.out.println("FUNDS: INSIDE THE MAINFRAME");
-                    updateUserFunds(Double.parseDouble(amountStr.replace("$","")), view);
+                    updateUserFunds(Double.parseDouble(amountStr.replace("$","")));
                 }
                 else{
                     Toast.makeText(getActivity(), "Enter a valid amount", Toast.LENGTH_LONG).show();
@@ -106,11 +122,10 @@ public class FundsFragment extends Fragment {
             }
         });
 
-
-
         return view;
     }
-    public void updateUserFunds(double new_funds, View view){
+
+    public void updateUserFunds(double new_funds){
         progressBar.setVisibility(View.VISIBLE);
 
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -120,20 +135,62 @@ public class FundsFragment extends Fragment {
         callAsync.enqueue(new Callback<Double>() {
             @Override
             public void onResponse(Call<Double> call, Response<Double> response) {
+                if (response.code() == 200) {
+                    getCurrBalance();
+                    Toast.makeText(getActivity(), "Funds added! Thx ;m", Toast.LENGTH_LONG).show();
+                }else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    if (response.code() == 400){
+                        System.out.println("Request Error :: " + response.errorBody().toString());
+                        Toast.makeText(getActivity(), "Invalid amount, try again", Toast.LENGTH_LONG).show();
+                    } else if (response.code() == 403){
+                        System.out.println("Request Error :: " + response.errorBody().toString());
+                        Toast.makeText(getActivity(), "Invalid User, please login", Toast.LENGTH_LONG).show();
+                    }
+                    else if (response.code() == 500){
+                        System.out.println("Request Error :: " + response.errorBody().toString());
+                        Toast.makeText(getActivity(), "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        System.out.println("Improper request Type :: " + response.code());
+                        Toast.makeText(getActivity(), "Devs didn't update the request type :^(", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<Double> call, Throwable t) {
                 progressBar.setVisibility(View.INVISIBLE);
-                if (response.code() == 200)
-                {
-                    Toast.makeText(getActivity(), "Funds added!", Toast.LENGTH_LONG).show();
-                } else if (response.code() == 400){
+                System.out.println("Network Error :: " + t.getLocalizedMessage());
+                Toast.makeText(getActivity(), "Request Error, try again", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void getCurrBalance(){
+        SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        String user_id = pref.getString("user_id", null);
+
+        Call<Map<String, User>> callUserInfo = rocketApi.createService().getUserData(user_id);
+        callUserInfo.enqueue(new Callback<Map<String, User>>() {
+            @Override
+            public void onResponse(Call<Map<String, User>> call, Response<Map<String, User>> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.code() == 200) {
+                    Map<String, User> userMap = response.body();
+                    Double bal = userMap.get(user_id).getBalance();
+                    current_balance.setText("$".concat(df.format(bal).toString()));
+                }else if (response.code() == 400){
                     System.out.println("Request Error :: " + response.errorBody().toString());
-                    Toast.makeText(getActivity(), "Invalid amount, try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error Fetching Amount", Toast.LENGTH_LONG).show();
                 } else if (response.code() == 403){
                     System.out.println("Request Error :: " + response.errorBody().toString());
-                    Toast.makeText(getActivity(), "Invalid User, please login", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Are you hacking?", Toast.LENGTH_LONG).show();
                 }
                 else if (response.code() == 500){
                     System.out.println("Request Error :: " + response.errorBody().toString());
-                    Toast.makeText(getActivity(), "Internal Server Error, try again later!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error Fetching Amount", Toast.LENGTH_LONG).show();
                 }
                 else{
                     System.out.println("Improper request Type :: " + response.code());
@@ -141,9 +198,8 @@ public class FundsFragment extends Fragment {
                 }
             }
 
-
             @Override
-            public void onFailure(Call<Double> call, Throwable t) {
+            public void onFailure(Call<Map<String, User>> call, Throwable t) {
                 progressBar.setVisibility(View.INVISIBLE);
                 System.out.println("Network Error :: " + t.getLocalizedMessage());
                 Toast.makeText(getActivity(), "Request Error, try again", Toast.LENGTH_LONG).show();
