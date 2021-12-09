@@ -80,6 +80,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/featured_background"
+                    android:textColor="@color/lightWhite"
+
                     android:background="@color/off_grey" />
 
 
@@ -106,12 +108,13 @@
         android:id="@+id/funds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="130dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/brandon_grotesque_black"
         android:layout_above="@id/cart"
         android:layout_centerInParent="true"
-        android:text="$40.65"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="80dp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:text="$0.00"
         android:textColor="@color/off_grey"
         android:textSize="28sp" />
     <Button
