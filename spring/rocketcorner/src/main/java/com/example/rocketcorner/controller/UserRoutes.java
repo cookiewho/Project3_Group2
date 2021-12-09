@@ -244,7 +244,7 @@ public class UserRoutes {
             } else {
                 currUser.setBalance(currUser.getBalance() - total_spent);
                 firebaseService.updateCart(userId, new HashMap<>());
-
+                firebaseService.updateUserDetails(userId, new HashMap<>() {{put(userId, currUser);}});
                 return new ResponseEntity<>("Purchased $" + String.valueOf(total_spent) + " of items", HttpStatus.OK);
             }
 
