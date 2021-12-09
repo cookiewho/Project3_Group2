@@ -93,7 +93,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginLeft="10dp"
                 android:fontFamily="@font/brandon_grotesque_light"
-                android:text="Your funds: "
+                android:text="Your balance: "
                 android:textAllCaps="true"
                 android:textColor="@color/colorAccent"
                 android:textSize="20sp" />
