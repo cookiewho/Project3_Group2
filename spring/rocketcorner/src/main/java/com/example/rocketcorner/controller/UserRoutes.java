@@ -223,7 +223,6 @@ public class UserRoutes {
     @PostMapping("/clearCart")
     public ResponseEntity<?> clearCart(@RequestParam String userId, @RequestParam String password) {
         try {
-            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
             User currUser = firebaseService.getUser(userId).get(userId);
 
             if(!currUser.getPassword().equals(password)) {
@@ -242,9 +241,8 @@ public class UserRoutes {
             if(total_spent > currUser.getBalance()) {
                 return new ResponseEntity<>("Not Enough Funds.", HttpStatus.FORBIDDEN);
             } else {
-                currUser.setBalance(currUser.getBalance() - total_spent);
                 firebaseService.updateCart(userId, new HashMap<>());
-
+                firebaseService.updateUserDetails(userId, new HashMap<>() {{put("balance", currUser.getBalance());}});
                 return new ResponseEntity<>("Purchased $" + String.valueOf(total_spent) + " of items", HttpStatus.OK);
             }
 

@@ -129,6 +129,7 @@ public class AccountFragment extends Fragment  {
         }
 
 
+
         featuredItemsRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         ArrayList<FeaturedHelperClass> featuredItems = new ArrayList<>();
@@ -141,8 +142,8 @@ public class AccountFragment extends Fragment  {
         adapter = new FeaturedAdapter(featuredItems);
         featuredItemsRecycler.setAdapter(adapter);
 
-        rocketInterface rocketApi = retrofit.create(rocketInterface.class);
-        Call<Map<String, User>> call = com.example.rocketcorner.rocketApi.createService().getUserData(user_id);
+
+        Call<Map<String, User>> call = rocketApi.createService().getUserData(user_id);
         call.enqueue(new Callback<Map<String, User>>() {
             @Override
             public void onResponse(Call<Map<String, User>> call, Response<Map<String, User>> response) {

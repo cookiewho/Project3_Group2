@@ -1,12 +1,17 @@
 package com.example.rocketcorner;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +31,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CartActivity extends AppCompatActivity {
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
-
+    Map<String, Product> allProd;
+    Button purchase;
+    double balance = 0;
+    String user_id;
+    String password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +53,12 @@ public class CartActivity extends AppCompatActivity {
         Bundle args = intent.getBundleExtra("BUNDLE");
         User u = (User) args.getSerializable("USER");
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        rocketInterface rocketApi = retrofit.create(rocketInterface.class);
-        Call<Map<String, Product>> call = com.example.rocketcorner.rocketApi.createService().getAllProdData();
+        Call<Map<String, Product>> call = rocketApi.createService().getAllProdData();
         call.enqueue(new Callback<Map<String, Product>>() {
             @Override
             public void onResponse(Call<Map<String, Product>> call, Response<Map<String, Product>> response) {
-                Map<String, Product> allProd = response.body();
+                allProd = response.body();
 
                 HashMap<Product, Integer> cart = new HashMap<>();
                 for(Map.Entry<String, Integer> e:u.getCart().entrySet()){
@@ -75,20 +79,47 @@ public class CartActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Map<String, Product>> call, Throwable t) {
-
+                Log.d("==ERROR==", t.toString());
             }
         });
 
+        purchase = findViewById(R.id.purchase);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        user_id = pref.getString("user_id", null);
+        password = pref.getString("user_password", null);
+        purchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<String> call = rocketApi.createService().purchase(user_id, password);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        String result = "Not enough funds.";
 
+                        if(response.code() == 200) {
+                            result = response.body().toString();
+                        }
 
+                        AlertDialog.Builder alert = new AlertDialog.Builder(CartActivity.this);
+                        alert.setMessage(result);
+                        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = MainActivity.getIntent(getApplicationContext());
+                                startActivity(intent);
+                            }
+                        });
+                        alert.show();
+                    }
 
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d("==ERROR==", t.toString());
+                    }
+                });
 
-        /*
-        IDEA
-        1. have adapter contain a <product, int> list pair, set it it null
-        2. when populate check if this is set to null, if it is then we pull data from original dataset otherwise we pull data from this
-        3. make an invisible amount textview and set it to visible if its not null
-         */
+            }
+        });
     }
 
 }
