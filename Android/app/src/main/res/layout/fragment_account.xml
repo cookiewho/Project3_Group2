@@ -7,7 +7,6 @@
     tools:context=".fragments.AccountFragment">
 
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,19 +21,18 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="Welcome username!"
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="50dp"
                     android:fontFamily="@font/brandon_grotesque_black"
-                    android:textColor="@color/colorAccent"
+                    android:text="Welcome username!"
+                    android:textColor="@color/off_grey"
                     android:textSize="28sp" />
 
 
             </RelativeLayout>
-
 
 
             <RelativeLayout
@@ -42,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:background="@color/lightWhite">
+                android:background="@color/off_grey">
 
                 <LinearLayout
                     android:id="@+id/featured_background"
@@ -82,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/featured_background"
-                    android:background="@color/home_background" />
+                    android:background="@color/off_grey" />
 
 
             </RelativeLayout>
@@ -90,43 +88,42 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="50dp"
                 android:fontFamily="@font/brandon_grotesque_light"
                 android:text="Your balance: "
                 android:textAllCaps="true"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/off_grey"
                 android:textSize="20sp" />
-
-            <TextView
-
-                android:text="$40.65"
-                android:id="@+id/funds"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="130dp"
-                android:fontFamily="@font/brandon_grotesque_black"
-                android:textColor="@color/colorAccent"
-                android:textSize="28sp" />
-
 
 
         </LinearLayout>
 
     </ScrollView>
 
+    <TextView
 
+        android:id="@+id/funds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:layout_above="@id/cart"
+        android:layout_centerInParent="true"
+        android:text="$40.65"
+        android:textColor="@color/off_grey"
+        android:textSize="28sp" />
     <Button
         android:id="@+id/cart"
         android:layout_width="50mm"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:shadowColor="@color/black"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="5dp"
+        android:background="@color/red"
         android:fontFamily="@font/brandon_grotesque_black"
-        android:background="@color/banner_background_light"
+        android:shadowColor="@color/black"
         android:text="Shopping Cart" />
 
 

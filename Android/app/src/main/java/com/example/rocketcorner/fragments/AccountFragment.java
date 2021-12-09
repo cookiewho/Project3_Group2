@@ -31,6 +31,7 @@ import com.example.rocketcorner.rocketApi;
 import com.example.rocketcorner.rocketInterface;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -63,7 +64,7 @@ public class AccountFragment extends Fragment  {
     public static final String BASE_URL = "http://rocketcorner.herokuapp.com/";
     Button cart;
     String user_id;
-
+    private final DecimalFormat df = new DecimalFormat("#,##0.00");
     private TextView username;
     private TextView funds;
 
@@ -128,8 +129,6 @@ public class AccountFragment extends Fragment  {
             startActivity(intent);
         }
 
-
-
         featuredItemsRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         ArrayList<FeaturedHelperClass> featuredItems = new ArrayList<>();
@@ -142,7 +141,6 @@ public class AccountFragment extends Fragment  {
         adapter = new FeaturedAdapter(featuredItems);
         featuredItemsRecycler.setAdapter(adapter);
 
-
         Call<Map<String, User>> call = rocketApi.createService().getUserData(user_id);
         call.enqueue(new Callback<Map<String, User>>() {
             @Override
@@ -154,7 +152,8 @@ public class AccountFragment extends Fragment  {
 
 
                     username.setText("Welcome " + u.getUsername());
-                    funds.setText("$ " + u.getBalance());
+                    funds.setText("$".concat(df.format(u.getBalance()).toString()));
+
                     cart.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
