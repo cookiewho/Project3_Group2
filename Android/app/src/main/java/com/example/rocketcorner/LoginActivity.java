@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editTextPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+
     }
 
 
@@ -68,8 +69,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.register:
                 startActivity(new Intent(this, RegisterUser.class));
-                break;
-
             case R.id.signIn:
                 try {
                     userLogin();
@@ -122,6 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("user_id", apiResponse);
+                    editor.putString("user_password", password);
                     editor.apply();
 
                     Intent intent = MainActivity.getIntent(getApplicationContext());

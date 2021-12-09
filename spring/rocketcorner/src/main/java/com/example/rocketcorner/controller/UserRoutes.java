@@ -168,8 +168,16 @@ public class UserRoutes {
     }
 
     @PatchMapping("/updateCart")
-    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public ResponseEntity<?> updateCart(@RequestParam String userId, @RequestParam String password, @RequestParam String cartUpdatesMapStr) throws ExecutionException, InterruptedException, JsonProcessingException {
+        System.out.println("are we here?");
         try {
+
+           User currUser = firebaseService.getUser(userId).get(userId);
+           
+            if(!currUser.getPassword().equals(password)) {
+                return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
+            }
+
             cartUpdatesMapStr = "{"+ cartUpdatesMapStr + "}";
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Integer> cartUpdatesMap;
@@ -186,13 +194,65 @@ public class UserRoutes {
             if(updatedCart != null) {
                 return new ResponseEntity<>(updatedCart, HttpStatus.OK);
             }
+
             return new ResponseEntity<>("Invalid ID Provided", HttpStatus.FORBIDDEN);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/getCart")
+    public ResponseEntity<?> getCart(@RequestParam String userId, @RequestParam String password) {
+        try {
+            User currUser = firebaseService.getUser(userId).get(userId);
+
+            if(!currUser.getPassword().equals(password)) {
+                return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>(currUser.getCart(), HttpStatus.OK);
+
         } catch (Exception e) {
             System.out.print(e);
             return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @PostMapping("/clearCart")
+    public ResponseEntity<?> clearCart(@RequestParam String userId, @RequestParam String password) {
+        try {
+            HashMap<String, User> allUsersHash = firebaseService.getAllUsers();
+            User currUser = firebaseService.getUser(userId).get(userId);
+
+            if(!currUser.getPassword().equals(password)) {
+                return new ResponseEntity<>("Invalid PW", HttpStatus.FORBIDDEN);
+            }
+
+            double total_spent = 0;
+
+            Map<String, Integer> myMap = currUser.getCart();
+
+            for(Map.Entry<String, Integer> x : myMap.entrySet()) {
+                double price = firebaseService.getProduct(x.getKey()).get(x.getKey()).getPrice();
+                total_spent +=  price * x.getValue();
+            }
+
+            if(total_spent > currUser.getBalance()) {
+                return new ResponseEntity<>("Not Enough Funds.", HttpStatus.FORBIDDEN);
+            } else {
+                currUser.setBalance(currUser.getBalance() - total_spent);
+                firebaseService.updateCart(userId, new HashMap<>());
+
+                return new ResponseEntity<>("Purchased $" + String.valueOf(total_spent) + " of items", HttpStatus.OK);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
     public String duplicateCreds(String username, String email, String id) throws ExecutionException, InterruptedException {
