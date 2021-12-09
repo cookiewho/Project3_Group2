@@ -15,8 +15,9 @@
     <color name="darkerGrey">#1C1C1C</color>
     <color name="black">#FF000000</color>
 
-    <color name="white">#FFFFFFFF</color>
-
+    <color name="off_grey">#9E9E9E</color>
+    <color name="white">#FFFFFF</color>
+  
     <color name="colorPrimary">#ffe400</color>
     <color name="colorPrimaryDark">#ffa600</color>
     <color name="colorAccent">#272727</color>
@@ -36,6 +37,5 @@
     <color name="card3">#f7c59f</color>
     <color name="card4">#b8d7f5</color>
 
-    <color name="off_grey">#9E9E9E</color>
->>>>>>> a2ee1595735b90fece35a9a3cec09d2f8385720c
+
 </resources>

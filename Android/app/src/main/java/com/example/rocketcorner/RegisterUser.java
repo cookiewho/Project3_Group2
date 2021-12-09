@@ -46,7 +46,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
 
-        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -103,43 +103,6 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
             return;
         }
 
-
-
-//        //progressBar.setVisibility(View.VISIBLE);
-//        mAuth = FirebaseAuth.getInstance();
-//        mAuth.createUserWithEmailAndPassword("test@gmail.com", "123456");
-//
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//
-//                        if(task.isSuccessful()){
-//                            User user = new User(fullName, email);
-//
-//                            FirebaseDatabase.getInstance().getReference("Users")
-//                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if(task.isSuccessful()){
-//                                        Toast.makeText(RegisterUser.this, "User has been registered", Toast.LENGTH_LONG).show();
-//                                        //progressBar.setVisibility(View.VISIBLE);
-//                                    }else{
-//                                        Toast.makeText(RegisterUser.this,"Failed to register! Try again!", Toast.LENGTH_LONG).show();
-//                                        //progressBar.setVisibility(View.GONE);
-//                                    }
-//                                }
-//                            });
-//
-//
-//                        }else{
-//                            Toast.makeText(RegisterUser.this,"Failed to register! Try again!", Toast.LENGTH_LONG).show();
-//                            //progressBar.setVisibility(View.GONE);
-//
-//                        }
-//                    }
-//                });
 
         Call<String> callAsync = rocketApi.createService().registerUser(fullName, email, password);
         callAsync.enqueue(new Callback<String>() {
