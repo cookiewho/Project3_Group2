@@ -53,6 +53,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         editTextUsername = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.password);
+
+        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -109,14 +114,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
+
+        //progressBar.setVisibility(View.VISIBLE);
+        //mAuth = FirebaseAuth.getInstance();
+
+        //mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
         Call<String> callAsync = rocketApi.createService().loginUser(username, password);
         callAsync.enqueue(new Callback<String>() {
+
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 progressBar.setVisibility(View.INVISIBLE);
                 if (response.code() == 200)
                 {
                     String apiResponse = response.body();
+                    System.out.println("Response: " + apiResponse);
+
 
                     SharedPreferences pref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();

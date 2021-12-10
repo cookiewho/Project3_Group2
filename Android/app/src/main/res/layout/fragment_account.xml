@@ -3,26 +3,139 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".fragments.AccountFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:fontFamily="@font/brandon_grotesque_black"
+                    android:textColor="@color/off_grey"
+                    android:textSize="28sp" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/off_grey">
+
+                <LinearLayout
+                    android:id="@+id/featured_background"
+                    android:layout_width="170dp"
+                    android:layout_height="300dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/banner_background_light"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="50dp"
+                        android:fontFamily="@font/brandon_grotesque_black"
+                        android:lineHeight="24sp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Featured Items"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="25sp" />
+
+                    <!--                        <TextView-->
+                    <!--                            android:layout_width="wrap_content"-->
+                    <!--                            android:layout_height="wrap_content"-->
+                    <!--                            android:layout_margin="10dp"-->
+                    <!--                            android:text="@strings/featured_Items_description" />-->
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/featured_Items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/featured_background"
+                    android:textColor="@color/lightWhite"
+
+                    android:background="@color/off_grey" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="50dp"
+                android:fontFamily="@font/brandon_grotesque_light"
+                android:text="Your balance: "
+                android:textAllCaps="true"
+                android:textColor="@color/off_grey"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <TextView
+
+        android:id="@+id/funds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/cart"
         android:layout_centerInParent="true"
-        android:text="Account" />
-
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="80dp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:textColor="@color/off_grey"
+        android:textSize="28sp" />
     <Button
         android:id="@+id/cart"
         android:layout_width="50mm"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:background="@color/red_dark"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="5dp"
+        android:background="@color/red"
+        android:fontFamily="@font/brandon_grotesque_black"
         android:shadowColor="@color/black"
         android:text="Shopping Cart" />
 
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        />
+
 
 </RelativeLayout>
+
+    <!--        android:background="@color/red_dark"-->

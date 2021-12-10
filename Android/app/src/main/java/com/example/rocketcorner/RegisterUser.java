@@ -46,8 +46,10 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
 
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -101,6 +103,7 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
             return;
         }
 
+
         Call<String> callAsync = rocketApi.createService().registerUser(fullName, email, password);
         callAsync.enqueue(new Callback<String>() {
             @Override
@@ -138,5 +141,6 @@ public class RegisterUser extends AppCompatActivity implements  View.OnClickList
                 Toast.makeText(RegisterUser.this, "Request Error, try again", Toast.LENGTH_LONG).show();
             }
         });
+
     }
 }
